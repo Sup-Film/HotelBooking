@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { SearchCriteria, ServiceType } from "@/types";
 import { FaHotel, FaPlane, FaCar } from "react-icons/fa";
 
@@ -9,11 +10,12 @@ interface SearchFormProps {
 }
 
 export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
+  const router = useRouter();
   // State สำหรับเก็บข้อมูลการค้นหา
   const [searchData, setSearchData] = useState<SearchCriteria>({
-    location: "Pattaya",
-    checkIn: "2021-01-28",
-    checkOut: "2021-01-29",
+    location: "",
+    checkIn: "",
+    checkOut: "",
     adults: 2,
     children: 1,
     rooms: 1,
@@ -27,12 +29,12 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
     setSearchData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // ฟังก์ชันสำหรับ submit form
+  // ฟังก์ชันสำหรับ submit form (ใช้ query string)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(searchData);
-    }
+    const params = new URLSearchParams();
+    params.append("location", String(searchData.location ?? ""));
+    router.push(`/explore?${params.toString()}`);
   };
 
   // Service tabs data

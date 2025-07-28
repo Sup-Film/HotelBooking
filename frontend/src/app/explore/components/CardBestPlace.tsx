@@ -1,19 +1,20 @@
 "use client";
 import Image from "next/image";
-
-interface CardBestPlaceProps {
-  name: string;
-  description: string;
-  image: string;
-}
+import { Hotel } from "@/types";
+import { useRouter } from "next/navigation";
 
 const CardBestPlace = ({
   bestPlaces,
   variant,
 }: {
-  bestPlaces: CardBestPlaceProps[];
+  bestPlaces: Hotel[];
   variant: "desktop" | "mobile";
 }) => {
+  const router = useRouter();
+  const handleViewDetails = (hotel: Hotel) => {
+    // ไปหน้า detail โดยส่ง id หรือ slug
+    router.push(`/explore/hotel/${hotel.id}`); // Assuming hotel.id is the identifier
+  };
   return (
     <div
       className={`grid ${variant === "desktop" ? "grid-cols-3 gap-6" : "mb-24 grid-cols-1 gap-4"}`}
@@ -37,7 +38,10 @@ const CardBestPlace = ({
                   {place.description}
                 </p>
               </div>
-              <button className="self-start rounded-md px-4 py-2 font-semibold text-blue-600 shadow transition-colors hover:bg-blue-100">
+              <button
+                className="self-start rounded-md px-4 py-2 font-semibold text-blue-600 shadow transition-colors hover:bg-blue-100 cursor-pointer"
+                onClick={() => handleViewDetails(place)}
+              >
                 View Details
               </button>
             </div>
@@ -47,7 +51,10 @@ const CardBestPlace = ({
                 {place.name}
               </h3>
               <p className="mb-2 text-sm text-gray-600">{place.description}</p>
-              <button className="w-1/2 self-start rounded-md px-6 py-4 font-semibold text-blue-600 shadow-lg transition-colors hover:bg-blue-100">
+              <button
+                className="w-1/2 self-start rounded-md px-6 py-4 font-semibold text-blue-600 shadow-lg transition-colors hover:bg-blue-100 cursor-pointer"
+                onClick={() => handleViewDetails(place)}
+              >
                 View Details
               </button>
             </div>

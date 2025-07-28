@@ -1,12 +1,14 @@
 "use client";
-import React from "react";
-import Image from "next/image";
-import ExploreSearchBar from "./components/ExploreSearchBar";
+import React, { useEffect, useState } from "react";
+import ExploreSearchBar from "../components/ExploreSearchBar";
 import Sidebar from "@/components/Sidebar";
-import BentoGrid from "./components/BentoGrid";
-import SearchBar from "./components/SearchBar";
-import CardRating from "./components/CardRating";
-import RoomCard from "./components/RoomCard";
+import BentoGrid from "../components/BentoGrid";
+import SearchBar from "../components/SearchBar";
+import CardRating from "../components/CardRating";
+import RoomCard from "../components/RoomCard";
+import { Hotel } from "@/types";
+import { useParams } from "next/navigation";
+import api from "@/lib/api";
 
 // Mock data for initial layout (replace with API call later)
 const hotel = {
@@ -42,6 +44,26 @@ const hotel = {
 };
 
 const ExploreHotelPage = () => {
+  const { id } = useParams();
+  const [hotels, setHotels] = useState<Hotel>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHotel = async () => {
+      try {
+        const response = await api.get(`/${id}`);
+        setHotels(response.data);
+        console.log("Fetched hotel data:", response.data);
+      } catch (error) {
+        console.error("Error fetching hotel data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHotel();
+  }, [id]);
+
   return (
     <div className="flex h-full w-full bg-[#f7f8fd]">
       {/* Side bar */}
@@ -60,7 +82,13 @@ const ExploreHotelPage = () => {
           {/* Left Section: Bento Grid and Info */}
           <div className="min-w-0 flex-1">
             {/* Bento Grid for Images */}
-            <BentoGrid hotel={hotel} variant="desktop" />
+            {hotels ? (
+              <BentoGrid hotel={hotels} variant="desktop" />
+            ) : (
+              <div className="text-center text-gray-500">
+                No hotel data available
+              </div>
+            )}
 
             {/* Hotel Info Section */}
             <div className="mb-4 mt-4 flex items-center justify-between gap-2">
@@ -79,7 +107,15 @@ const ExploreHotelPage = () => {
             </div>
 
             {/* Room Cards */}
-            <RoomCard hotel={hotel} />
+            {
+              hotels ? (
+                <RoomCard hotel={hotels} variant="desktop" />
+              ) : (
+                <div className="text-center text-gray-500">
+                  No rooms available
+                </div>
+              )
+            }
           </div>
 
           {/* Right Section: Rating & Services */}
@@ -88,14 +124,20 @@ const ExploreHotelPage = () => {
       </div>
 
       {/* Mobile content */}
-      <div className="flex flex-1 flex-col justify-items-center overflow-hidden px-8 sm:hidden mb-20">
+      <div className="mb-20 flex flex-1 flex-col justify-items-center overflow-hidden px-8 sm:hidden">
         <ExploreSearchBar variant="mobile" />
 
         {/* Search Bar Layout */}
         <SearchBar variant="mobile" />
 
         {/* BentoGrid */}
-        <BentoGrid hotel={hotel} variant="mobile" />
+        {hotels ? (
+          <BentoGrid hotel={hotels} variant="desktop" />
+        ) : (
+          <div className="text-center text-gray-500">
+            No hotel data available
+          </div>
+        )}
 
         {/* Hotel Info Section */}
         <div className="mb-4 mt-4 flex flex-col gap-1">
@@ -108,6 +150,15 @@ const ExploreHotelPage = () => {
             Price Starting from 1,000 BAHT
           </button>
         </div>
+
+        {/* Room Cards */}
+        {hotels ? (
+          <RoomCard hotel={hotels} variant="mobile" />
+        ) : (
+          <div className="text-center text-gray-500">
+            No rooms available
+          </div>
+        )}
 
         {/* Card Rating */}
         <CardRating hotel={hotel} variant="mobile" />

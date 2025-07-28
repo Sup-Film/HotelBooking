@@ -6,23 +6,17 @@ interface RecentSearchesProps {
   hotels: Hotel[]; // รายการโรงแรมที่จะแสดง
   title?: string; // หัวข้อของ section
   variant?: "desktop" | "mobile";
-  onHotelSelect?: (hotelId: string) => void; // callback เมื่อเลือกโรงแรม
 }
 
 export function RecentSearches({
   hotels,
   title = "Recent Searches",
   variant = "desktop",
-  onHotelSelect,
 }: RecentSearchesProps) {
   // ฟังก์ชันสำหรับจัดการการเลือกโรงแรม
   const handleHotelBooking = (hotelId: string) => {
-    if (onHotelSelect) {
-      onHotelSelect(hotelId);
-    } else {
-      // Default behavior
-      console.log(`Selected hotel: ${hotelId}`);
-    }
+    // นำทางไปยังหน้าจองโรงแรม
+    console.log(`Booking hotel with ID: ${hotelId}`);
   };
 
   // ถ้าไม่มีข้อมูลโรงแรม ไม่แสดงอะไร
@@ -42,7 +36,7 @@ export function RecentSearches({
         <div className="flex flex-col gap-4">
           {hotels.map((hotel) => (
             <HotelCard
-              key={hotel.id} // ใช้ unique id เป็น key เพื่อให้ React render ได้ถูกต้อง
+              key={hotel.id}
               hotel={hotel}
               variant="desktop"
               onBooking={handleHotelBooking}
@@ -60,14 +54,14 @@ export function RecentSearches({
 
       {/* Container สำหรับ horizontal scrolling */}
       <div className="flex flex-row items-center gap-x-5 overflow-x-auto pb-2">
-        {hotels.map((hotel) => (
+        {/* {hotels.map((hotel) => (
           <HotelCard
             key={hotel.id}
             hotel={hotel}
             variant="mobile"
             onBooking={handleHotelBooking}
           />
-        ))}
+        ))} */}
       </div>
     </div>
   );

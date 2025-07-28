@@ -1,13 +1,18 @@
 // ข้อมูลพื้นฐานของโรงแรม
+export interface Room {
+  type: string;
+  price: number;
+  image: string;
+}
+
 export interface Hotel {
-  id: string;           // รหัสโรงแรมที่ไม่ซ้ำกัน
-  name: string;         // ชื่อโรงแรม
-  rating: number;       // คะแนน rating (0-5)
-  reviews: number;      // จำนวน reviews
-  price: number;        // ราคาต่อคืน
-  image: string;        // path ของรูปภาพ
-  amenities: string[];  // สิ่งอำนวยความสะดวก
-  location?: string;    // สถานที่ (optional เพราะอาจจะไม่มีในบางกรณี)
+  id: number;                // รหัสโรงแรม
+  name: string;
+  location: string;
+  price: number;
+  image: string;
+  description: string;
+  rooms: Room[];
 }
 
 // ข้อมูลสำหรับ amenity icon mapping

@@ -4,13 +4,30 @@ import RecentSearches from "@/components/RecentSearches";
 import SearchForm from "@/components/SearchForm";
 import Sidebar from "@/components/Sidebar";
 import { mockHotels } from "@/data/hotels";
+import api from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  // ฟังก์ชันสำหรับจัดการการเลือกโรงแรม
-  const handleHotelSelect = (hotelId: string) => {
-    console.log("Selected hotel:", hotelId);
-    // ในอนาคตจะ navigate ไปหน้ารายละเอียดโรงแรม
-    // router.push(`/hotels/${hotelId}`);
+  const router = useRouter();
+  const [hotels, setHotels] = useState(mockHotels);
+
+  // Fetch all hotels for RecentSearches only (not for main display)
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await api.get("/search");
+        setHotels(response.data);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+        setHotels(mockHotels); // fallback
+      }
+    };
+    fetchHotels();
+  }, []);
+
+  const handleSearch = (criteria: { location: string }) => {
+    router.push(`/explore/${encodeURIComponent(criteria.location)}`);
   };
 
   return (
@@ -30,15 +47,14 @@ export default function Home() {
             />
 
             {/* Search Form Component */}
-            <SearchForm variant="desktop" />
+            <SearchForm variant="desktop" onSearch={handleSearch} />
           </div>
 
           {/* Recent Searches Component */}
           <RecentSearches
-            hotels={mockHotels}
+            hotels={hotels}
             title="Recent Searches"
             variant="desktop"
-            onHotelSelect={handleHotelSelect}
           />
         </section>
 
@@ -61,14 +77,13 @@ export default function Home() {
           />
 
           {/* Search Form Component สำหรับ Mobile */}
-          <SearchForm variant="mobile" />
+          <SearchForm variant="mobile" onSearch={handleSearch} />
 
           {/* Recent Searches Component สำหรับ Mobile */}
           <RecentSearches
-            hotels={mockHotels}
+            hotels={hotels}
             title="Recent Searches"
             variant="mobile"
-            onHotelSelect={handleHotelSelect}
           />
         </section>
       </div>

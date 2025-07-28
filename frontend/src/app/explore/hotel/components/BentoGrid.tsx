@@ -1,26 +1,7 @@
 "use client";
 import Image from "next/image";
 import { JSX } from "react";
-
-interface Hotel {
-  id: number;
-  name: string;
-  location: string;
-  images: string[];
-  rating: number;
-  reviews: number;
-  housekeeping: number;
-  food: number;
-  service: number;
-  staff: number;
-  services: string[];
-  price: number;
-  rooms: {
-    name: string;
-    price: number;
-    image: string;
-  }[];
-}
+import { Hotel } from "@/types/index";
 
 const BentoGrid = ({
   hotel,
@@ -35,7 +16,7 @@ const BentoGrid = ({
         <div className="col-span-2 row-span-2">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[0]}
+              src={hotel.image[0]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -45,7 +26,7 @@ const BentoGrid = ({
         <div className="row-start-3">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[1]}
+              src={hotel.image[1]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -55,7 +36,7 @@ const BentoGrid = ({
         <div className="row-start-3">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[2]}
+              src={hotel.image[2]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -75,7 +56,7 @@ const BentoGrid = ({
         <div className="col-span-2 row-span-3">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[0]}
+              src={hotel.image[0]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -85,7 +66,7 @@ const BentoGrid = ({
         <div className="col-span-2 col-start-3 row-span-2">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[2]}
+              src={hotel.image[2]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -95,7 +76,7 @@ const BentoGrid = ({
         <div className="col-start-3 row-start-3">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[2]}
+              src={hotel.image[2]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"
@@ -105,7 +86,7 @@ const BentoGrid = ({
         <div className="col-start-4 row-start-3">
           <div className="relative h-full w-full">
             <Image
-              src={hotel.images[2]}
+              src={hotel.image[2]}
               alt={hotel.name}
               fill
               className="rounded-xl object-cover"

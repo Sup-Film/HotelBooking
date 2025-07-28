@@ -1,11 +1,38 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
-import { bestPlaces, mockRecommendedHotels } from "@/data/hotels";
-import RecommendedList from "../components/RecommendedList";
-import ExploreSearchBar from "../components/ExploreSearchBar";
-import CardBestPlace from "../components/CardBestPlace";
+import { mockRecommendedHotels } from "@/data/hotels";
+import RecommendedList from "./components/RecommendedList";
+import ExploreSearchBar from "./components/ExploreSearchBar";
+import CardBestPlace from "./components/CardBestPlace";
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
+import { Hotel } from "@/types/index";
+import { useSearchParams } from "next/navigation";
 
 export default function ExplorePage() {
+  const searchParams = useSearchParams();
+  const location = searchParams?.get("location") ?? "";
+
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchHotels = async () => {
+      try {
+        const res = await api.get(`/search?location=${location}`);
+        setHotels(res.data);
+        // console.log("Fetched hotels:", res.data);
+      } catch (error) {
+        setHotels([]); // หรือ mockHotels
+        console.error("Error fetching hotels:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchHotels();
+  }, [location]);
+
   return (
     <div className="flex h-full w-full bg-[#f7f8fd]">
       <Sidebar />
@@ -33,7 +60,13 @@ export default function ExplorePage() {
                 </button>
               </div>
             </div>
-            <CardBestPlace bestPlaces={bestPlaces} variant="desktop" />
+            {isLoading ? (
+              <div className="py-8 text-center text-blue-500">Loading...</div>
+            ) : hotels.length === 0 ? (
+              <div className="py-8 text-center text-gray-500">No hotels found</div>
+            ) : (
+              <CardBestPlace bestPlaces={hotels} variant="desktop" />
+            )}
           </section>
 
           {/* Right Section (20%) */}
@@ -75,7 +108,13 @@ export default function ExplorePage() {
           </div>
         </div>
         {/* Best Places Card */}
-        <CardBestPlace bestPlaces={bestPlaces} variant="mobile" />
+        {isLoading ? (
+          <div className="py-8 text-center text-blue-500">Loading...</div>
+        ) : hotels.length === 0 ? (
+          <div className="py-8 text-center text-gray-500">No hotels found</div>
+        ) : (
+          <CardBestPlace bestPlaces={hotels} variant="mobile" />
+        )}
       </div>
     </div>
   );

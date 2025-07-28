@@ -1,0 +1,197 @@
+[
+  {
+    "id": 1,
+    "name": "The Langham, Chicago",
+    "location": "Chicago",
+    "description": "A luxury hotel in the heart of Chicago with river views and world-class amenities.",
+    "price": 5000,
+    "image": [
+      "/images/rec-01.png",
+      "/images/rec-01.png",
+      "/images/rec-01.png",
+      "/images/rec-01.png"
+    ],
+    "rooms": [
+      {
+        "type": "Deluxe Room",
+        "price": 5000,
+        "image": "/images/rec-01.png"
+      },
+      {
+        "type": "Grand Room",
+        "price": 6500,
+        "image": "/images/rec-01.png"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Nobu Hotel Chicago",
+    "location": "Chicago",
+    "description": "Modern Japanese-inspired hotel with fine dining and elegant rooms.",
+    "price": 4500,
+    "image": [
+      "/images/rec-02.png",
+      "/images/rec-02.png",
+      "/images/rec-02.png",
+      "/images/rec-02.png"
+    ],
+    "rooms": [
+      {
+        "type": "Standard Room",
+        "price": 4500,
+        "image": "/images/rec-02.png"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Holiday Inn Pattaya",
+    "location": "Pattaya",
+    "description": "Family-friendly beachfront hotel with stunning sea views and pools.",
+    "price": 2500,
+    "image": [
+      "/images/rec-03.png",
+      "/images/rec-03.png",
+      "/images/rec-03.png",
+      "/images/rec-03.png"
+    ],
+    "rooms": [
+      {
+        "type": "Sea View",
+        "price": 2500,
+        "image": "/images/rec-03.png"
+      },
+      {
+        "type": "Garden View",
+        "price": 2000,
+        "image": "/images/rec-03.png"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Hilton Pattaya",
+    "location": "Pattaya",
+    "description": "Upscale hotel with panoramic ocean views and rooftop infinity pool.",
+    "price": 3000,
+    "image": [
+      "/images/rec-04.png",
+      "/images/rec-04.png",
+      "/images/rec-04.png",
+      "/images/rec-04.png"
+    ],
+    "rooms": [
+      {
+        "type": "Ocean View",
+        "price": 3000,
+        "image": "/images/rec-04.png"
+      },
+      {
+        "type": "City View",
+        "price": 2800,
+        "image": "/images/rec-04.png"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Marriott Resort & Spa",
+    "location": "Pattaya",
+    "description": "Resort and spa with lush gardens, pools, and premium wellness facilities.",
+    "price": 3500,
+    "image": [
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png"
+    ],
+    "rooms": [
+      {
+        "type": "Garden View",
+        "price": 3500,
+        "image": "/images/rec-05.png"
+      },
+      {
+        "type": "Pool View",
+        "price": 4000,
+        "image": "/images/rec-05.png"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "The Ritz-Carlton, Koh Samui",
+    "location": "Koh Samui",
+    "description": "Exclusive resort with private beaches, luxury villas, and spa treatments.",
+    "price": 7000,
+    "image": [
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png"
+    ],
+    "rooms": [
+      {
+        "type": "Ocean View Suite",
+        "price": 7000,
+        "image": "/images/rec-05.png"
+      },
+      {
+        "type": "Garden Villa",
+        "price": 6000,
+        "image": "/images/rec-05.png"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Four Seasons Resort Koh Samui",
+    "location": "Koh Samui",
+    "description": "Secluded luxury resort with beachfront villas and world-class service.",
+    "price": 8000,
+    "image": [
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png"
+    ],
+    "rooms": [
+      {
+        "type": "Beachfront Villa",
+        "price": 8000,
+        "image": "/images/rec-05.png"
+      },
+      {
+        "type": "Hillside Villa",
+        "price": 7500,
+        "image": "/images/rec-05.png"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Anantara Bophut Koh Samui Resort",
+    "location": "Koh Samui",
+    "description": "Tropical resort with lagoon pools, gardens, and direct beach access.",
+    "price": 6000,
+    "image": [
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png",
+      "/images/rec-05.png"
+    ],
+    "rooms": [
+      {
+        "type": "Lagoon Room",
+        "price": 6000,
+        "image": "/images/rec-05.png"
+      },
+      {
+        "type": "Garden Pool Villa",
+        "price": 6500,
+        "image": "/images/rec-05.png"
+      }
+    ]
+  }
+]

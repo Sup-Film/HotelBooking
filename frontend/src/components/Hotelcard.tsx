@@ -11,7 +11,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 interface HotelCardProps {
   hotel: Hotel;
   variant?: "desktop" | "mobile";
-  onBooking?: (hotelId: string) => void; // callback สำหรับการจอง
+  onBooking?: (hotelId: string) => void;
 }
 
 export function HotelCard({
@@ -25,7 +25,7 @@ export function HotelCard({
       <svg
         key={index}
         className={`ms-1 h-4 w-4 ${
-          index < Math.floor(hotel.rating) ? "text-yellow-300" : "text-gray-300"
+          index < Math.floor(4) ? "text-yellow-300" : "text-gray-300"
         }`}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ export function HotelCard({
     return (
       <div className="flex min-w-[260px] max-w-[320px] flex-col overflow-hidden p-3">
         <Image
-          src={hotel.image}
+          src={hotel.image[0]}
           alt={hotel.name}
           width={280}
           height={120}
@@ -81,31 +81,36 @@ export function HotelCard({
           {/* Rating badge และ reviews */}
           <div className="mb-2 flex items-center gap-2">
             <span className="rounded-2xl bg-red-400 px-2 py-1 text-xs text-white">
-              ★{hotel.rating}
+              ★4
             </span>
-            <span className="text-xs text-gray-400">
-              {hotel.reviews.toLocaleString()} Reviews
-            </span>
+            <span className="text-xs text-gray-400">1366 Reviews</span>
           </div>
 
           {/* Amenities */}
           <div className="mb-2 flex w-full flex-col items-start gap-2">
             <span className="py-1 text-xs">Amenities</span>
             <div className="flex justify-center gap-2">
-              {hotel.amenities.map((amenity, index) => (
-                <span
-                  key={index}
-                  className="rounded-md bg-white p-1 text-xs shadow"
-                >
-                  {getAmenityIcon(amenity)}
-                </span>
-              ))}
+              <span className="rounded-md bg-white p-1 text-xs shadow">
+                {getAmenityIcon("shower")}
+              </span>
+              <span className="rounded-md bg-white p-1 text-xs shadow">
+                {getAmenityIcon("car")}
+              </span>
+              <span className="rounded-md bg-white p-1 text-xs shadow">
+                {getAmenityIcon("wine")}
+              </span>
+              <span className="rounded-md bg-white p-1 text-xs shadow">
+                {getAmenityIcon("wifi")}
+              </span>
+              <span className="rounded-md bg-white p-1 text-xs shadow">
+                {getAmenityIcon("more")}
+              </span>
             </div>
           </div>
 
           {/* Price */}
           <span className="mb-2 block font-bold text-[#2d36d9]">
-            {hotel.price.toLocaleString()}/night
+            {hotel.price}/night
           </span>
         </div>
 
@@ -123,7 +128,7 @@ export function HotelCard({
   return (
     <div className="flex overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl">
       <Image
-        src={hotel.image}
+        src={hotel.image[0]}
         alt={hotel.name}
         width={150}
         height={80}
@@ -140,11 +145,9 @@ export function HotelCard({
           {/* Rating badge และ reviews */}
           <div className="mt-1 flex items-center gap-2">
             <span className="rounded-2xl bg-red-400 px-2 py-1 text-xs text-white">
-              ★{hotel.rating}
+              ★4
             </span>
-            <span className="text-gray-400">
-              {hotel.reviews.toLocaleString()} Reviews
-            </span>
+            <span className="text-gray-400">1366 Reviews</span>
           </div>
         </div>
 
@@ -152,21 +155,26 @@ export function HotelCard({
         <div className="mb-2 flex flex-col gap-2">
           <span className="py-1 text-xs">Amenities</span>
           <div className="flex gap-2">
-            {hotel.amenities.map((amenity, index) => (
-              <span
-                key={index}
-                className="rounded-md bg-white p-1 text-xs shadow"
-              >
-                {getAmenityIcon(amenity)}
-              </span>
-            ))}
+            <span className="rounded-md bg-white p-1 text-xs shadow">
+              {getAmenityIcon("shower")}
+            </span>
+            <span className="rounded-md bg-white p-1 text-xs shadow">
+              {getAmenityIcon("car")}
+            </span>
+            <span className="rounded-md bg-white p-1 text-xs shadow">
+              {getAmenityIcon("wine")}
+            </span>
+            <span className="rounded-md bg-white p-1 text-xs shadow">
+              {getAmenityIcon("wifi")}
+            </span>
+            <span className="rounded-md bg-white p-1 text-xs shadow">
+              {getAmenityIcon("more")}
+            </span>
           </div>
         </div>
 
         {/* Price */}
-        <span className="font-bold text-[#2d36d9]">
-          {hotel.price.toLocaleString()}/night
-        </span>
+        <span className="font-bold text-[#2d36d9]">{hotel.price}/night</span>
       </div>
 
       <button

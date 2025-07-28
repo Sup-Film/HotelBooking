@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "c1d2e3f4-g5h6-4i7j-8k9l-0m1n2o3p4q5r",
+		"name": "Degito Hotel Booking API",
+		"description": "A collection for testing the hotel booking backend API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search Hotels",
+			"item": [
+				{
+					"name": "Search by Location (Chicago)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/search?location=Chicago",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "Chicago"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Hotels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Calculate Cost",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/calculate-cost?roomType=Deluxe Room&days=3",
+					"protocol": "http",
+					"host": [
+								"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"calculate-cost"
+					],
+					"query": [
+						{
+							"key": "roomType",
+							"value": "Deluxe Room"
+						},
+						{
+							"key": "days",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
