@@ -13,8 +13,8 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/") setActiveMenu("Home");
-    else if (pathname === "/explore") setActiveMenu("Explore");
+    if (pathname === "/home") setActiveMenu("Home");
+    else if (pathname === "/") setActiveMenu("Explore");
     else if (pathname === "/trips") setActiveMenu("Trips");
     else if (pathname === "/profile") setActiveMenu("Profile");
   }, [pathname, setActiveMenu]);
@@ -37,7 +37,7 @@ const Sidebar = () => {
                   : "cursor-pointer"
               }
               onClick={() => {
-                router.push("/");
+                router.push("/home");
               }}
             >
               <FaHome
@@ -56,7 +56,7 @@ const Sidebar = () => {
                   : "cursor-pointer"
               }
               onClick={() => {
-                router.push("/explore");
+                router.push("/");
               }}
             >
               <FaMagnifyingGlass
@@ -124,7 +124,7 @@ const Sidebar = () => {
                 : "cursor-pointer"
             }
             onClick={() => {
-              router.push("/");
+              router.push("/home");
             }}
           >
             <FaHome
@@ -143,7 +143,7 @@ const Sidebar = () => {
                 : "cursor-pointer"
             }
             onClick={() => {
-              router.push("/explore");
+              router.push("/");
             }}
           >
             <FaMagnifyingGlass

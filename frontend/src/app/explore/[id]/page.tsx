@@ -1,9 +1,9 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import { bestPlaces, mockRecommendedHotels } from "@/data/hotels";
-import RecommendedList from "./components/RecommendedList";
-import ExploreSearchBar from "./components/ExploreSearchBar";
-import CardBestPlace from "./components/CardBestPlace";
+import RecommendedList from "../components/RecommendedList";
+import ExploreSearchBar from "../components/ExploreSearchBar";
+import CardBestPlace from "../components/CardBestPlace";
 
 export default function ExplorePage() {
   return (

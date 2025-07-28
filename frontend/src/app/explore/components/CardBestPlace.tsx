@@ -16,7 +16,7 @@ const CardBestPlace = ({
 }) => {
   return (
     <div
-      className={`grid ${variant === "desktop" ? "grid-cols-2 gap-6" : "mb-24 grid-cols-1 gap-4"}`}
+      className={`grid ${variant === "desktop" ? "grid-cols-3 gap-6" : "mb-24 grid-cols-1 gap-4"}`}
     >
       {bestPlaces.map((place) => (
         <div key={place.name} className="flex flex-col">
