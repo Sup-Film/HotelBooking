@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import Sidebar from "@/components/Sidebar";
-import ExploreSearchBar from "./components/ExploreSearchBar";
+import ExploreSearchBar from "@/components/ExploreSearchBar";
 import HotelInfo from "./components/HotelInfo";
 import CheckinSummary from "./components/CheckinSummary";
 import GuestForm from "./components/GuestForm";
 import PriceSummary from "./components/PriceSummary";
-import SearchBar from "./components/SearchBar";
+import ReviewSearchBar from "./components/ReviewSearchBar";
 
 interface PriceResponse {
   nights: number;
@@ -84,9 +84,13 @@ const ReviewHotelPage = () => {
       {/* Main content for desktop */}
       <div className="hidden flex-1 flex-col sm:flex">
         <div className="bg-blue-50 px-8 py-8">
-          <ExploreSearchBar variant="desktop" />
+          <ExploreSearchBar
+            variant="desktop"
+            configKey="review"
+            onBack={() => router.back()}
+          />
           {/* Search Bar (mock) */}
-          <SearchBar variant="desktop" />
+          <ReviewSearchBar variant="desktop" />
         </div>
 
         <div className="flex w-full gap-8 px-8 py-8">
@@ -130,7 +134,7 @@ const ReviewHotelPage = () => {
       <div className="mb-24 flex-1 sm:hidden">
         <div className="flex flex-col bg-blue-50 px-4">
           <ExploreSearchBar variant="mobile" />
-          <SearchBar variant="mobile" />
+          <ReviewSearchBar variant="mobile" />
         </div>
 
         <div className="flex w-full gap-8 px-4 py-8">

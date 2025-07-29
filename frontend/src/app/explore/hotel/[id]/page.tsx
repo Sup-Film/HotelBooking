@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ExploreSearchBar from "../components/ExploreSearchBar";
+import ExploreSearchBar from "@/components/ExploreSearchBar";
 import Sidebar from "@/components/Sidebar";
 import BentoGrid from "../components/BentoGrid";
-import SearchBar from "../components/SearchBar";
+import HotelSearchBar from "../components/HotelSearchBar";
 import CardRating from "../components/CardRating";
 import RoomCard from "../components/RoomCard";
 import { Hotel } from "@/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/api";
 
 // Mock data for initial layout (replace with API call later)
@@ -44,6 +44,7 @@ const hotel = {
 };
 
 const ExploreHotelPage = () => {
+  const router = useRouter();
   const { id } = useParams();
   const [hotels, setHotels] = useState<Hotel>();
   const [isLoading, setIsLoading] = useState(true);
@@ -72,10 +73,14 @@ const ExploreHotelPage = () => {
       {/* Main content for desktop */}
       <div className="hidden flex-1 flex-col sm:flex">
         {/* Search Bar */}
-        <ExploreSearchBar variant="desktop" />
+        <ExploreSearchBar
+          variant="desktop"
+          configKey="hotelDetail"
+          onBack={() => router.back()}
+        />
 
         {/* Search Bar Layout */}
-        <SearchBar variant="desktop" />
+        <HotelSearchBar variant="desktop" />
 
         {/* Main Content: Left-Right Section */}
         <div className="flex gap-16 px-8 py-6">
@@ -107,15 +112,13 @@ const ExploreHotelPage = () => {
             </div>
 
             {/* Room Cards */}
-            {
-              hotels ? (
-                <RoomCard hotel={hotels} variant="desktop" />
-              ) : (
-                <div className="text-center text-gray-500">
-                  No rooms available
-                </div>
-              )
-            }
+            {hotels ? (
+              <RoomCard hotel={hotels} variant="desktop" />
+            ) : (
+              <div className="text-center text-gray-500">
+                No rooms available
+              </div>
+            )}
           </div>
 
           {/* Right Section: Rating & Services */}
@@ -128,7 +131,7 @@ const ExploreHotelPage = () => {
         <ExploreSearchBar variant="mobile" />
 
         {/* Search Bar Layout */}
-        <SearchBar variant="mobile" />
+        <HotelSearchBar variant="mobile" />
 
         {/* BentoGrid */}
         {hotels ? (
@@ -155,9 +158,7 @@ const ExploreHotelPage = () => {
         {hotels ? (
           <RoomCard hotel={hotels} variant="mobile" />
         ) : (
-          <div className="text-center text-gray-500">
-            No rooms available
-          </div>
+          <div className="text-center text-gray-500">No rooms available</div>
         )}
 
         {/* Card Rating */}
