@@ -9,6 +9,8 @@ import CheckinSummary from "./components/CheckinSummary";
 import GuestForm from "./components/GuestForm";
 import PriceSummary from "./components/PriceSummary";
 import ReviewSearchBar from "./components/ReviewSearchBar";
+import api from "@/lib/api";
+import { Hotel } from "@/types";
 
 interface PriceResponse {
   nights: number;
@@ -22,21 +24,14 @@ const ReviewHotelPage = () => {
   const router = useRouter();
 
   // รับ param จาก query string
+  const hotelId = searchParams.get("hotelId") || "";
   const roomType = searchParams.get("roomType") || "Deluxe Room";
   const checkIn = searchParams.get("checkIn") || "";
   const checkOut = searchParams.get("checkOut") || "";
   const guests = searchParams.get("guests") || "1";
 
-  // สมมุติข้อมูลโรงแรม/ห้อง (ควรดึงจาก API จริง)
-  const hotel = {
-    name: "Holiday Inn Resort",
-    location: "Tambudki, Arpora, goa, Goa, India",
-    review: "This hotel is reviewed by global firm",
-    image: "/images/hotel.png",
-    stars: 4,
-  };
-
   // State สำหรับข้อมูลราคา (mockup fallback)
+  const [hotel, setHotel] = useState<Hotel | null>(null);
   const [priceInfo, setPriceInfo] = useState<PriceResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -52,30 +47,34 @@ const ReviewHotelPage = () => {
     return diff;
   }
 
-  // เรียก API คำนวณราคา ถ้า error หรือไม่มี backend ให้ใช้ mockup
   useEffect(() => {
-    const nights = getNights(checkIn, checkOut);
-    setLoading(true);
-    fetch(
-      `/api/calculate?roomType=${encodeURIComponent(roomType)}&nights=${nights}`,
-    )
-      .then((res) => {
-        if (!res.ok) throw new Error("API error");
-        return res.json();
-      })
-      .then((data) => setPriceInfo(data))
-      .catch(() => {
-        // fallback mockup
-        const price = 1500 * nights;
-        const vat = price * 0.07;
-        setPriceInfo({ nights, price, vat, total: price + vat });
-      })
-      .finally(() => setLoading(false));
-  }, [roomType, checkIn, checkOut]);
+    const fetchHotelData = async () => {
+      try {
+        const response = await api.get(`/${hotelId}`);
+        setHotel(response.data);
+        console.log("Fetched hotel data:", response.data);
+        const nights = getNights(checkIn, checkOut);
 
-  // if (!checkIn || !checkOut || !guests) {
-  //   return <div className="p-8 text-red-500">Missing required parameters.</div>;
-  // }
+        const priceResponse = await api.post("/calculate-cost", {
+          hotelId: hotelId,
+          roomType: roomType,
+          days: nights,
+        });
+        console.log("Price response:", priceResponse.data);
+
+        setPriceInfo({
+          nights: nights,
+          price: priceResponse.data.subtotal,
+          vat: priceResponse.data.taxesAndFees,
+          total: priceResponse.data.totalAmount,
+        });
+        setLoading(false);
+      } catch (error) {
+        console.log("Error fetching hotel data:", error);
+      }
+    };
+    fetchHotelData();
+  }, [hotelId, roomType, checkIn, checkOut]);
 
   return (
     <div className="flex h-full w-full">
@@ -90,89 +89,118 @@ const ReviewHotelPage = () => {
             onBack={() => router.back()}
           />
           {/* Search Bar (mock) */}
-          <ReviewSearchBar variant="desktop" />
-        </div>
-
-        <div className="flex w-full gap-8 px-8 py-8">
-          {/* Left: Review Info */}
-          <div className="flex-1 flex-row">
-            <div className="mb-4 text-xl font-semibold">
-              Review your booking
-            </div>
-            <HotelInfo
-              variant="desktop"
-              name={hotel.name}
-              location={hotel.location}
-              review={hotel.review}
-              image={hotel.image}
-              stars={hotel.stars}
-            />
-            <CheckinSummary
-              variant="desktop"
-              checkIn={checkIn}
-              checkOut={checkOut}
-              guests={guests}
-              nights={priceInfo ? priceInfo.nights : null}
-            />
-            <GuestForm variant="desktop" />
-            <button className="mt-2 w-1/3 rounded-lg bg-blue-600 py-3 font-semibold text-white">
-              Continue
-            </button>
-          </div>
-          {/* Right: Price Summary */}
-          <PriceSummary
+          <ReviewSearchBar
             variant="desktop"
-            nights={priceInfo ? priceInfo.nights : null}
-            price={priceInfo ? priceInfo.price : null}
-            vat={priceInfo ? priceInfo.vat : null}
-            total={priceInfo ? priceInfo.total : null}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            guests={guests}
           />
         </div>
+        {loading ? (
+          <div className="flex h-full items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        ) : hotel ? (
+          <div className="flex w-full gap-8 px-8 py-8">
+            {/* Left: Review Info */}
+            <div className="flex-1 flex-row">
+              <div className="mb-4 text-xl font-semibold">
+                Review your booking
+              </div>
+              <HotelInfo
+                variant="desktop"
+                name={hotel?.name || "Hotel Name"}
+                location={hotel?.location || "Hotel Location"}
+                review={hotel?.description || "Hotel Description"}
+                image={hotel?.image[0] || "/placeholder.jpg"}
+                stars={hotel?.rating ? Math.round(hotel.rating / 2) : 0}
+              />
+              <CheckinSummary
+                variant="desktop"
+                checkIn={checkIn}
+                checkOut={checkOut}
+                guests={guests}
+                nights={priceInfo?.nights ?? null}
+              />
+              <GuestForm variant="desktop" />
+              <button className="mt-2 w-1/3 rounded-lg bg-blue-600 py-3 font-semibold text-white">
+                Continue
+              </button>
+            </div>
+            {/* Right: Price Summary */}
+            <PriceSummary
+              variant="desktop"
+              nights={priceInfo ? priceInfo.nights : null}
+              price={priceInfo ? priceInfo.price : null}
+              vat={priceInfo ? priceInfo.vat : null}
+              total={priceInfo ? priceInfo.total : null}
+            />
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <p className="text-gray-500">Hotel not found</p>
+          </div>
+        )}
       </div>
 
       {/* Mobile view */}
       <div className="mb-24 flex-1 sm:hidden">
         <div className="flex flex-col bg-blue-50 px-4">
           <ExploreSearchBar variant="mobile" />
-          <ReviewSearchBar variant="mobile" />
+          <ReviewSearchBar
+            variant="mobile"
+            checkIn={checkIn}
+            checkOut={checkOut}
+            guests={guests}
+          />
         </div>
 
-        <div className="flex w-full gap-8 px-4 py-8">
-          {/* Left: Review Info */}
-          <div className="flex-1 flex-row">
-            <div className="mb-4 text-xl font-semibold">
-              Review your booking
-            </div>
-            <HotelInfo
-              variant="mobile"
-              name={hotel.name}
-              location={hotel.location}
-              review={hotel.review}
-              image={hotel.image}
-              stars={hotel.stars}
-            />
-            <CheckinSummary
-              variant="mobile"
-              checkIn={checkIn}
-              checkOut={checkOut}
-              guests={guests}
-              nights={priceInfo ? priceInfo.nights : null}
-            />
-            {/* Summary */}
-            <PriceSummary
-              variant="mobile"
-              nights={priceInfo ? priceInfo.nights : null}
-              price={priceInfo ? priceInfo.price : null}
-              vat={priceInfo ? priceInfo.vat : null}
-              total={priceInfo ? priceInfo.total : null}
-            />
-
-            <GuestForm variant="mobile" />
-            <button className="mt-2 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white">
-              Continue
-            </button>
+        {loading ? (
+          <div className="flex h-full items-center justify-center">
+            <p>Loading...</p>
           </div>
-        </div>
+        ) : hotel ? (
+          <div className="flex w-full gap-8 px-4 py-8">
+            {/* Left: Review Info */}
+            <div className="flex-1 flex-row">
+              <div className="mb-4 text-xl font-semibold">
+                Review your booking
+              </div>
+              <HotelInfo
+                variant="mobile"
+                name={hotel?.name || "Hotel Name"}
+                location={hotel?.location || "Hotel Location"}
+                review={hotel?.description || "Hotel Description"}
+                image={hotel?.image[0] || "/placeholder.jpg"}
+                stars={hotel?.rating ? Math.round(hotel.rating / 2) : 0}
+              />
+              <CheckinSummary
+                variant="mobile"
+                checkIn={checkIn}
+                checkOut={checkOut}
+                guests={guests}
+                nights={priceInfo ? priceInfo.nights : null}
+              />
+              {/* Summary */}
+              <PriceSummary
+                variant="mobile"
+                nights={priceInfo ? priceInfo.nights : null}
+                price={priceInfo ? priceInfo.price : null}
+                vat={priceInfo ? priceInfo.vat : null}
+                total={priceInfo ? priceInfo.total : null}
+              />
+
+              <GuestForm variant="mobile" />
+              <button className="mt-2 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white">
+                Continue
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <p className="text-gray-500">Hotel not found</p>
+          </div>
+        )}
       </div>
     </div>
   );

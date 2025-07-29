@@ -1,16 +1,52 @@
 "use client";
 import Image from "next/image";
-import { Hotel } from "@/types/index";
+import { Hotel, Room } from "@/types/index";
 import { useRouter } from "next/navigation";
 
 const RoomCard = ({
   hotel,
   variant,
+  bookingData = { checkIn: "", checkOut: "", adults: 1, children: 0, rooms: 1 },
 }: {
   hotel: Hotel | undefined;
   variant: "desktop" | "mobile";
+  bookingData: {
+    checkIn: string;
+    checkOut: string;
+    adults: number;
+    children: number;
+    rooms: number;
+  };
 }) => {
   const router = useRouter();
+
+  const handleBookNow = (room: Room) => {
+    if (!bookingData.checkIn || !bookingData.checkOut) {
+      alert("Please select Check-in and Check-out dates.");
+      return;
+    }
+
+    const checkInDate = new Date(bookingData.checkIn);
+    const checkOutDate = new Date(bookingData.checkOut);
+
+    if (checkOutDate <= checkInDate) {
+      alert("Check-out date must be after Check-in date.");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.append("hotelId", hotel?.id || "");
+    params.append("roomType", room.type);
+    params.append("checkIn", bookingData.checkIn);
+    params.append("checkOut", bookingData.checkOut);
+    params.append("rooms", bookingData.rooms.toString());
+    params.append(
+      "guests",
+      `${bookingData.adults} Adults, ${bookingData.children} Children`,
+    );
+
+    router.push(`/review?${params.toString()}`);
+  };
 
   if (variant === "mobile") {
     return (
@@ -40,7 +76,10 @@ const RoomCard = ({
               </span>
             </div>
             {/* Horizontal Book Now Button */}
-            <button className="w-full rounded-b-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700">
+            <button
+              className="w-full rounded-b-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+              onClick={() => handleBookNow(room)}
+            >
               Book Now
             </button>
           </div>
@@ -84,6 +123,7 @@ const RoomCard = ({
               borderTopRightRadius: "5px",
               borderBottomRightRadius: "5px",
             }}
+            onClick={() => handleBookNow(room)}
           >
             Book Now
           </button>

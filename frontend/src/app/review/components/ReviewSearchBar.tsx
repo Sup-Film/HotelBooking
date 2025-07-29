@@ -1,4 +1,28 @@
-const SearchBar = ({ variant }: { variant: "desktop" | "mobile" }) => {
+"use client";
+import { useState } from "react";
+
+const SearchBar = ({
+  variant,
+  checkIn,
+  checkOut,
+  guests,
+}: {
+  variant: "desktop" | "mobile";
+  checkIn?: string;
+  checkOut?: string;
+  guests?: string;
+}) => {
+  console.log(guests)
+  const formatDate = (dateStr: string | undefined) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    return d.toISOString().slice(0, 10);
+  };
+
+  const [checkInValue, setCheckInValue] = useState(formatDate(checkIn));
+  const [checkOutValue, setCheckOutValue] = useState(formatDate(checkOut));
+
   if (variant === "mobile") {
     return (
       <div className="flex w-full flex-col items-center gap-2 pb-6 pt-4">
@@ -10,12 +34,14 @@ const SearchBar = ({ variant }: { variant: "desktop" | "mobile" }) => {
         <div className="flex w-full">
           <input
             type="date"
-            placeholder="20 Dec,2020"
+            value={checkInValue}
+            onChange={(e) => setCheckInValue(e.target.value)}
             className="flex-1 border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
           />
           <input
             type="date"
-            placeholder="21 Dec,2020"
+            value={checkOutValue}
+            onChange={(e) => setCheckOutValue(e.target.value)}
             className="flex-1 border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
           />
         </div>
@@ -23,7 +49,7 @@ const SearchBar = ({ variant }: { variant: "desktop" | "mobile" }) => {
           type="button"
           className="w-full border border-gray-200 bg-white px-4 py-3 text-left text-sm text-gray-700 outline-none"
         >
-          2 adult ,0 children - 1 room
+          {guests} - 1 room
         </button>
         <button
           type="submit"
@@ -45,12 +71,14 @@ const SearchBar = ({ variant }: { variant: "desktop" | "mobile" }) => {
       <div>
         <input
           type="date"
-          placeholder="20 Dec,2020"
+          value={checkInValue}
+          onChange={(e) => setCheckInValue(e.target.value)}
           className="w-[150px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
         />
         <input
           type="date"
-          placeholder="21 Dec,2020"
+          value={checkOutValue}
+          onChange={(e) => setCheckOutValue(e.target.value)}
           className="w-[150px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
         />
       </div>
@@ -58,11 +86,11 @@ const SearchBar = ({ variant }: { variant: "desktop" | "mobile" }) => {
         type="button"
         className="w-[260px] border border-gray-200 bg-white px-4 py-3 text-left text-sm text-gray-700 outline-none"
       >
-        2 adult ,0 children - 1 room
+        {guests} - 1 room
       </button>
       <button
         type="submit"
-        className="ml-2 h-[48px] w-[200px] bg-blue-600 text-base font-semibold text-white shadow transition-colors hover:bg-blue-700 rounded-md"
+        className="ml-2 h-[48px] w-[200px] rounded-md bg-blue-600 text-base font-semibold text-white shadow transition-colors hover:bg-blue-700"
       >
         Search
       </button>

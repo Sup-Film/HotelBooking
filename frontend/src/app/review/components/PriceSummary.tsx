@@ -23,7 +23,7 @@ const PriceSummary: React.FC<PriceSummaryProps> = ({
       <div className="mb-2 flex justify-between text-sm">
         <span>1 room X {nights ?? "-"} night</span>
         <span className="text-blue-500">
-          {price !== null ? price.toFixed(2) : "-"}
+          {price !== null ? Number(price).toFixed(2) : "-"}
         </span>
       </div>
       <div className="mb-2 flex justify-between text-sm">
@@ -33,25 +33,33 @@ const PriceSummary: React.FC<PriceSummaryProps> = ({
       <div className="mb-2 flex justify-between text-sm">
         <span>Price after discount</span>
         <span className="text-blue-500">
-          {price !== null ? price.toFixed(2) : "-"}
+          {price !== null ? Number(price).toFixed(2) : "-"}
         </span>
       </div>
       <div className="mb-2 flex justify-between text-sm">
         <span>Taxes & service fees</span>
         <span className="text-blue-500">
-          {vat !== null ? vat.toFixed(2) : "-"}
+          {vat !== null ? Number(vat).toFixed(2) : "-"}
         </span>
       </div>
       <div className="mt-4 flex justify-between text-lg font-bold">
         <span>Total Amount</span>
         <span className="text-blue-700">
           {total !== null
-            ? total.toLocaleString(undefined, { minimumFractionDigits: 2 })
+            ? Number(total).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })
             : "-"}
         </span>
       </div>
     </div>
-    <div className={variant === "mobile" ? "rounded-xl bg-white p-4 shadow" : "rounded-xl bg-white p-4 shadow"}>
+    <div
+      className={
+        variant === "mobile"
+          ? "rounded-xl bg-white p-4 shadow"
+          : "rounded-xl bg-white p-4 shadow"
+      }
+    >
       <div className="mb-1 font-semibold">Cancellation Charges</div>
       <div className="mb-1 text-sm font-medium">Non Refundable</div>
       <div className="mb-2 text-xs text-gray-500">

@@ -24,6 +24,20 @@ const ExploreHotelPage = () => {
   const [hotels, setHotels] = useState<Hotel>();
   const [isLoading, setIsLoading] = useState(true);
 
+  const [bookingData, setBookingData] = useState<BookingData>({
+    checkIn: "",
+    checkOut: "",
+    adults: 2,
+    children: 1,
+    rooms: 1,
+  });
+
+  console.log("Booking Data:", bookingData);
+
+  const handleBookingChange = (field: string, value: string | number) => {
+    setBookingData((prev) => ({ ...prev, [field]: value }));
+  };
+
   useEffect(() => {
     const fetchHotel = async () => {
       if (!id) {
@@ -61,7 +75,11 @@ const ExploreHotelPage = () => {
         />
 
         {/* Search Bar Layout */}
-        <HotelSearchBar variant="desktop" />
+        <HotelSearchBar
+          variant="desktop"
+          bookingData={bookingData}
+          onBookingChange={handleBookingChange}
+        />
 
         {/* Main Content: Left-Right Section */}
         {isLoading ? (
@@ -92,7 +110,11 @@ const ExploreHotelPage = () => {
               </div>
 
               {/* Room Cards */}
-              <RoomCard hotel={hotels} variant="desktop" />
+              <RoomCard
+                hotel={hotels}
+                variant="desktop"
+                bookingData={bookingData}
+              />
             </div>
 
             {/* Right Section: Rating & Services */}
@@ -111,7 +133,11 @@ const ExploreHotelPage = () => {
         <ExploreSearchBar variant="mobile" />
 
         {/* Search Bar Layout */}
-        <HotelSearchBar variant="mobile" />
+        <HotelSearchBar
+          variant="mobile"
+          bookingData={bookingData}
+          onBookingChange={handleBookingChange}
+        />
 
         {/* Main Content with Loading State */}
         {isLoading ? (
@@ -126,7 +152,9 @@ const ExploreHotelPage = () => {
 
             {/* Hotel Info Section */}
             <div className="mb-4 mt-4 flex flex-col gap-1">
-              <h2 className="text-lg font-semibold text-gray-900">{hotels.name}</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {hotels.name}
+              </h2>
               <p className="cursor-pointer text-base text-blue-400 hover:underline">
                 {hotels.location}
               </p>
@@ -137,7 +165,11 @@ const ExploreHotelPage = () => {
             </div>
 
             {/* Room Cards */}
-            <RoomCard hotel={hotels} variant="mobile" />
+            <RoomCard
+              hotel={hotels}
+              variant="mobile"
+              bookingData={bookingData}
+            />
 
             {/* Card Rating */}
             <CardRating hotel={hotels} variant="mobile" />

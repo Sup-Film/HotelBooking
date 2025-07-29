@@ -62,38 +62,40 @@ const CheckinSummary: React.FC<CheckinSummaryProps> = ({
     );
   }
 
-  <div className="mb-4 flex items-center gap-8 rounded-xl bg-[#f1f3ff] p-4">
-    <div>
-      <div className="text-xs text-gray-500">Check-in</div>
-      <div className="text-lg font-semibold">
-        {checkIn
-          ? new Date(checkIn).toLocaleDateString(undefined, {
-              weekday: "long",
-              day: "numeric",
-              month: "short",
-            })
-          : "-"}
+  return (
+    <div className="mb-4 flex items-center gap-8 rounded-xl bg-[#f1f3ff] p-4">
+      <div>
+        <div className="text-xs text-gray-500">Check-in</div>
+        <div className="text-lg font-semibold">
+          {checkIn
+            ? new Date(checkIn).toLocaleDateString(undefined, {
+                weekday: "long",
+                day: "numeric",
+                month: "short",
+              })
+            : "-"}
+        </div>
+        <div className="text-xs text-gray-500">10am</div>
       </div>
-      <div className="text-xs text-gray-500">10am</div>
-    </div>
-    <div className="rounded-lg bg-blue-200 p-3 font-semibold text-blue-600 shadow">
-      {nights ? `${nights} night` : "-"}
-    </div>
-    <div>
-      <div className="text-xs text-gray-500">Check-out</div>
-      <div className="text-lg font-semibold">
-        {checkOut
-          ? new Date(checkOut).toLocaleDateString(undefined, {
-              weekday: "long",
-              day: "numeric",
-              month: "short",
-            })
-          : "-"}
+      <div className="rounded-lg bg-blue-200 p-3 font-semibold text-blue-600 shadow">
+        {nights ? `${nights} night` : "-"}
       </div>
-      <div className="text-xs text-gray-500">10am</div>
+      <div>
+        <div className="text-xs text-gray-500">Check-out</div>
+        <div className="text-lg font-semibold">
+          {checkOut
+            ? new Date(checkOut).toLocaleDateString(undefined, {
+                weekday: "long",
+                day: "numeric",
+                month: "short",
+              })
+            : "-"}
+        </div>
+        <div className="text-xs text-gray-500">10am</div>
+      </div>
+      <div className="text-base font-semibold">{guests} Adult - 1 room</div>
     </div>
-    <div className="text-base font-semibold">{guests} Adult - 1 room</div>
-  </div>;
+  );
 };
 
 export default CheckinSummary;

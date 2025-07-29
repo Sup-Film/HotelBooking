@@ -4,6 +4,6 @@ const hotelController = require('../controllers/hotel.controller');
 
 router.get('/search', hotelController.searchHotels);
 router.get('/:id', hotelController.getHotelById);
-router.get('/calculate-cost', hotelController.calculateCost);
+router.post('/calculate-cost', hotelController.calculateCost);
 
 module.exports = router;

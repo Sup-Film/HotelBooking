@@ -35,36 +35,35 @@ const getHotelById = (req, res) => {
 
 const calculateCost = (req, res) => {
   try {
-    const { roomType, days } = req.query;
+    const { hotelId, roomType, days } = req.body;
 
-    if (!roomType || !days) {
-      return res.status(400).json({ error: 'Missing roomType or days parameter' });
+    if (!hotelId || !roomType || !days) {
+      return res.status(400).json({ error: 'Missing hotelId, roomType, or days in request body' });
     }
 
-    let roomPrice = 0;
-    for (const hotel of hotelData) {
-      const foundRoom = hotel.rooms.find(room => room.type === roomType);
-      if (foundRoom) {
-        roomPrice = foundRoom.price;
-        break;
-      }
+    const hotel = hotelsData.find(h => h.id === parseInt(hotelId));
+
+    if (!hotel) {
+      return res.status(404).json({ error: 'Hotel not found' });
     }
 
-    if (roomPrice === 0) {
+    const room = hotel.rooms.find(r => r.type === roomType);
+
+    if (!room) {
       return res.status(404).json({ error: 'Room type not found' });
     }
 
+    const roomPrice = room.price;
     const numberOfDays = parseInt(days, 10);
     const totalCost = roomPrice * numberOfDays;
     const vat = totalCost * 0.07; // 7% VAT
     const finalCost = totalCost + vat;
-
     res.json({
-      subtotal: totalCost.toFixed(2),
-      discount: "0.00",
-      priceAfterDiscount: totalCost.toFixed(2),
-      taxesAndFees: vat.toFixed(2),
-      totalAmount: finalCost.toFixed(2),
+      subtotal: totalCost,
+      discount: 0,
+      priceAfterDiscount: totalCost,
+      taxesAndFees: vat,
+      totalAmount: finalCost,
     });
 
   } catch (error) {
