@@ -6,7 +6,7 @@ export interface Room {
 }
 
 export interface Hotel {
-  id: number;                // รหัสโรงแรม
+  id: string;                // รหัสโรงแรม
   name: string;
   location: string;
   price: number;

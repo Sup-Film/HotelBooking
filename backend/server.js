@@ -8,7 +8,7 @@ const hotelRoutes = require('./src/routes/hotel.routes')
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
-app.use('/api', hotelRoutes);
+app.use('/api/hotels', hotelRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
