@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Hotel } from "@/types/index";
 import { useRouter, useSearchParams } from "next/navigation";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 export default function ExplorePage() {
   const router = useRouter();
@@ -62,9 +63,11 @@ export default function ExplorePage() {
               </div>
             </div>
             {isLoading ? (
-              <div className="py-8 text-center text-blue-500">Loading...</div>
+              <LoadingSkeleton />
             ) : hotels.length === 0 ? (
-              <div className="py-8 text-center text-gray-500">No hotels found</div>
+              <div className="py-8 text-center text-gray-500">
+                No hotels found
+              </div>
             ) : (
               <CardBestPlace bestPlaces={hotels} variant="desktop" />
             )}
