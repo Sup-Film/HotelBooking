@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ActiveMenuProvider } from "@/context/ActiveMenuContext";
+import { BookingProvider } from "@/context/BookingContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ActiveMenuProvider>
-          {children}
-        </ActiveMenuProvider>
+        <BookingProvider>
+          <ActiveMenuProvider>{children}</ActiveMenuProvider>
+        </BookingProvider>
       </body>
     </html>
   );

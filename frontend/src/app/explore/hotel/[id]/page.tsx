@@ -129,7 +129,7 @@ const ExploreHotelPage = () => {
       </div>
 
       {/* Mobile content */}
-      <div className="mb-20 flex flex-1 flex-col justify-items-center overflow-hidden px-8 sm:hidden">
+      <div className="mb-32 flex flex-1 flex-col justify-items-center overflow-hidden px-8 sm:hidden">
         <ExploreSearchBar variant="mobile" />
 
         {/* Search Bar Layout */}

@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import PaymentMethodList, {
   PaymentMethod,
@@ -10,13 +11,7 @@ import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { SiPhonepe } from "react-icons/si";
 import { MdOutlineAccountBalance } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
-
-interface PriceResponse {
-  nights: number;
-  price: number;
-  vat: number;
-  total: number;
-}
+import { useBooking } from "@/context/BookingContext";
 
 const paymentMethods: PaymentMethod[] = [
   {
@@ -47,25 +42,15 @@ const paymentMethods: PaymentMethod[] = [
 ];
 
 const PaymentPage = () => {
+  const { bookingDetails } = useBooking();
+  const { priceInfo } = bookingDetails;
   const [selected, setSelected] = useState("");
-  console.log("Selected payment method:", selected);
-  const [priceInfo, setPriceInfo] = useState<PriceResponse | null>(null);
-  // const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // mock query string params (ควรดึงจริงจาก router)
-  const nights = 1;
-  const price = 1000;
-  const vat = 140;
-  const total = 1140;
-
-  useEffect(() => {
-    // สมมุติ fetch ข้อมูลจริง
-    // setLoading(true);
-    setTimeout(() => {
-      setPriceInfo({ nights, price, vat, total });
-      // setLoading(false);
-    }, 300);
-  }, []);
+  const handleSelect = (id: string) => {
+    setSelected(id);
+    router.push("/payment/success");
+  };
 
   return (
     <div className="flex h-full w-full">
@@ -80,7 +65,7 @@ const PaymentPage = () => {
             <PaymentMethodList
               methods={paymentMethods}
               selectedId={selected}
-              onSelect={setSelected}
+              onSelect={handleSelect}
             />
           </div>
           {/* Right: Price Summary */}
@@ -126,7 +111,7 @@ const PaymentPage = () => {
           <PaymentMethodList
             methods={paymentMethods}
             selectedId={selected}
-            onSelect={setSelected}
+            onSelect={handleSelect}
           />
         </div>
       </div>

@@ -6,11 +6,12 @@ import Sidebar from "@/components/Sidebar";
 import ExploreSearchBar from "@/components/ExploreSearchBar";
 import HotelInfo from "./components/HotelInfo";
 import CheckinSummary from "./components/CheckinSummary";
-import GuestForm from "./components/GuestForm";
+import GuestForm, { GuestDetails } from "./components/GuestForm";
 import PriceSummary from "./components/PriceSummary";
 import ReviewSearchBar from "./components/ReviewSearchBar";
 import api from "@/lib/api";
 import { Hotel } from "@/types";
+import { useBooking } from "@/context/BookingContext";
 
 interface PriceResponse {
   nights: number;
@@ -22,6 +23,7 @@ interface PriceResponse {
 const ReviewHotelPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { bookingDetails, setBookingDetails } = useBooking();
 
   // รับ param จาก query string
   const hotelId = searchParams.get("hotelId") || "";
@@ -68,6 +70,15 @@ const ReviewHotelPage = () => {
           vat: priceResponse.data.taxesAndFees,
           total: priceResponse.data.totalAmount,
         });
+        setBookingDetails({
+          hotel: response.data,
+          priceInfo: {
+            nights: nights,
+            price: priceResponse.data.subtotal,
+            vat: priceResponse.data.taxesAndFees,
+            total: priceResponse.data.totalAmount,
+          },
+        });
         setLoading(false);
       } catch (error) {
         console.log("Error fetching hotel data:", error);
@@ -75,6 +86,58 @@ const ReviewHotelPage = () => {
     };
     fetchHotelData();
   }, [hotelId, roomType, checkIn, checkOut]);
+
+  const [guestDetails, setGuestDetails] = useState<GuestDetails>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    specialRequest: "",
+  });
+
+  const [errors, setErrors] = useState<Partial<GuestDetails>>({});
+
+  const handleDetailsChange = (field: keyof GuestDetails, value: string) => {
+    setGuestDetails((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Partial<GuestDetails> = {};
+
+    if (!guestDetails.firstName.trim()) {
+      newErrors.firstName = "First name is required.";
+    }
+    if (!guestDetails.lastName.trim()) {
+      newErrors.lastName = "Last name is required.";
+    }
+    if (!guestDetails.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(guestDetails.email)) {
+      newErrors.email = "Email is invalid.";
+    }
+    if (!guestDetails.mobile.trim()) {
+      newErrors.mobile = "Mobile number is required.";
+    }
+
+    setErrors(newErrors);
+    // ถ้า object newErrors ไม่มี key เลย แสดงว่าไม่มี error
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleContinue = () => {
+    // 3. เรียกใช้ฟังก์ชัน validate
+    if (validate()) {
+      // ถ้าไม่มี Error, ไปยังหน้า payment
+      setBookingDetails({ guestDetails });
+      console.log("Validation passed. Navigating to payment...");
+      router.push("/payment");
+    } else {
+      console.log("Validation failed.");
+    }
+  };
 
   return (
     <div className="flex h-full w-full">
@@ -122,8 +185,16 @@ const ReviewHotelPage = () => {
                 guests={guests}
                 nights={priceInfo?.nights ?? null}
               />
-              <GuestForm variant="desktop" />
-              <button className="mt-2 w-1/3 rounded-lg bg-blue-600 py-3 font-semibold text-white">
+              <GuestForm
+                variant="desktop"
+                guestDetails={guestDetails}
+                onDetailsChange={handleDetailsChange}
+                errors={errors}
+              />
+              <button
+                className="mt-2 w-1/3 rounded-lg bg-blue-600 py-3 font-semibold text-white"
+                onClick={handleContinue}
+              >
                 Continue
               </button>
             </div>
@@ -190,8 +261,16 @@ const ReviewHotelPage = () => {
                 total={priceInfo ? priceInfo.total : null}
               />
 
-              <GuestForm variant="mobile" />
-              <button className="mt-2 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white">
+              <GuestForm
+                variant="mobile"
+                guestDetails={guestDetails}
+                onDetailsChange={handleDetailsChange}
+                errors={errors}
+              />
+              <button
+                className="mt-2 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white"
+                onClick={handleContinue}
+              >
                 Continue
               </button>
             </div>
