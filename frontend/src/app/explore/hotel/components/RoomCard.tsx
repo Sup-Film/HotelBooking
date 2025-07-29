@@ -1,18 +1,21 @@
 "use client";
 import Image from "next/image";
 import { Hotel } from "@/types/index";
+import { useRouter } from "next/navigation";
 
 const RoomCard = ({
   hotel,
   variant,
 }: {
-  hotel: Hotel;
+  hotel: Hotel | undefined;
   variant: "desktop" | "mobile";
 }) => {
+  const router = useRouter();
+
   if (variant === "mobile") {
     return (
       <div className="my-2 flex flex-row gap-4 pb-2">
-        {hotel.rooms.map((room, idx) => (
+        {hotel?.rooms.map((room, idx) => (
           <div
             key={idx}
             className="flex w-full max-w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow"
@@ -24,20 +27,20 @@ const RoomCard = ({
                 src={room.image}
                 alt={room.type}
                 fill
-                className="object-cover rounded-t-lg"
+                className="rounded-t-lg object-cover"
               />
             </div>
             {/* Info below image */}
             <div className="flex flex-col items-start px-4 py-3">
-              <span className="mb-1 text-base text-gray-700 font-medium">{room.type}</span>
+              <span className="mb-1 text-base font-medium text-gray-700">
+                {room.type}
+              </span>
               <span className="mb-2 text-lg font-bold text-blue-700">
                 {room.price.toLocaleString()} BAHT/night
               </span>
             </div>
             {/* Horizontal Book Now Button */}
-            <button
-              className="w-full rounded-b-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
-            >
+            <button className="w-full rounded-b-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700">
               Book Now
             </button>
           </div>
@@ -48,7 +51,7 @@ const RoomCard = ({
 
   return (
     <div className="mt-2 flex justify-between gap-6">
-      {hotel.rooms.map((room, idx) => (
+      {hotel?.rooms.map((room, idx) => (
         <div
           key={idx}
           className="flex h-[110px] w-[370px] overflow-hidden rounded-sm border border-gray-200 bg-white shadow"

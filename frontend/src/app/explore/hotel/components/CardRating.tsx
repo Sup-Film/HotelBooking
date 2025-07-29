@@ -1,29 +1,11 @@
 "use client";
-interface Hotel {
-  id: number;
-  name: string;
-  location: string;
-  images: string[];
-  rating: number;
-  reviews: number;
-  housekeeping: number;
-  food: number;
-  service: number;
-  staff: number;
-  services: string[];
-  price: number;
-  rooms: {
-    name: string;
-    price: number;
-    image: string;
-  }[];
-}
+import { Hotel } from "@/types/index";
 
 const CardRating = ({
   hotel,
   variant,
 }: {
-  hotel: Hotel;
+  hotel: Hotel | undefined;
   variant: "desktop" | "mobile";
 }) => {
   if (variant === "mobile") {
@@ -32,12 +14,12 @@ const CardRating = ({
         <div className="mb-4 rounded-xl bg-white p-6 shadow">
           <div className="mb-2 flex items-center gap-3">
             <span className="rounded-lg bg-blue-600 px-3 py-1 text-lg font-bold text-white">
-              {hotel.rating}
+              {hotel ? hotel.rating : "N/A"}
             </span>
             <div>
               <span className="text-lg font-semibold">Excellent</span>
               <div className="text-sm text-gray-400">
-                {hotel.reviews} Reviews
+                {hotel ? hotel.reviews : 0} Reviews
               </div>
             </div>
           </div>
@@ -45,35 +27,35 @@ const CardRating = ({
             <div className="mb-1 flex items-center gap-2 text-sm">
               Housekeeping{" "}
               <span>
-                {"★".repeat(hotel.housekeeping)}
-                {"☆".repeat(5 - hotel.housekeeping)}
+                {"★".repeat(hotel ? hotel.housekeeping : 0)}
+                {"☆".repeat(5 - (hotel ? hotel.housekeeping : 0))}
               </span>
             </div>
             <div className="mb-1 flex items-center gap-2 text-sm">
               Food{" "}
               <span>
-                {"★".repeat(hotel.food)}
-                {"☆".repeat(5 - hotel.food)}
+                {"★".repeat(hotel ? hotel.food : 0)}
+                {"☆".repeat(5 - (hotel ? hotel.food : 0))}
               </span>
             </div>
             <div className="mb-1 flex items-center gap-2 text-sm">
               Service{" "}
               <span>
-                {"★".repeat(hotel.service)}
-                {"☆".repeat(5 - hotel.service)}
+                {"★".repeat(hotel ? hotel.service : 0)}
+                {"☆".repeat(5 - (hotel ? hotel.service : 0))}
               </span>
             </div>
             <div className="mb-1 flex items-center gap-2 text-sm">
               Staff{" "}
               <span>
-                {"★".repeat(hotel.staff)}
-                {"☆".repeat(5 - hotel.staff)}
+                {"★".repeat(hotel ? hotel.staff : 0)}
+                {"☆".repeat(5 - (hotel ? hotel.staff : 0))}
               </span>
             </div>
           </div>
           <div className="mb-2">Services</div>
           <div className="mb-2 flex gap-2">
-            {hotel.services.map((s, i) => (
+            {hotel?.services.map((s, i) => (
               <div
                 key={i}
                 className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-[#f1f3ff]"
@@ -108,46 +90,48 @@ const CardRating = ({
       <div className="mb-4 rounded-xl bg-white p-6 shadow">
         <div className="mb-2 flex items-center gap-3">
           <span className="rounded-lg bg-blue-600 px-3 py-1 text-lg font-bold text-white">
-            {hotel.rating}
+            {hotel ? hotel.rating : "N/A"}
           </span>
           <div>
             <span className="text-lg font-semibold">Excellent</span>
-            <div className="text-sm text-gray-400">{hotel.reviews} Reviews</div>
+            <div className="text-sm text-gray-400">
+              {hotel ? hotel.reviews : 0} Reviews
+            </div>
           </div>
         </div>
         <div className="mb-2">
           <div className="mb-1 flex items-center gap-2 text-sm">
             Housekeeping{" "}
             <span>
-              {"★".repeat(hotel.housekeeping)}
-              {"☆".repeat(5 - hotel.housekeeping)}
+              {"★".repeat(hotel ? hotel.housekeeping : 0)}
+              {"☆".repeat(5 - (hotel ? hotel.housekeeping : 0))}
             </span>
           </div>
           <div className="mb-1 flex items-center gap-2 text-sm">
             Food{" "}
             <span>
-              {"★".repeat(hotel.food)}
-              {"☆".repeat(5 - hotel.food)}
+              {"★".repeat(hotel ? hotel.food : 0)}
+              {"☆".repeat(5 - (hotel ? hotel.food : 0))}
             </span>
           </div>
           <div className="mb-1 flex items-center gap-2 text-sm">
             Service{" "}
             <span>
-              {"★".repeat(hotel.service)}
-              {"☆".repeat(5 - hotel.service)}
+              {"★".repeat(hotel ? hotel.service : 0)}
+              {"☆".repeat(5 - (hotel ? hotel.service : 0))}
             </span>
           </div>
           <div className="mb-1 flex items-center gap-2 text-sm">
             Staff{" "}
             <span>
-              {"★".repeat(hotel.staff)}
-              {"☆".repeat(5 - hotel.staff)}
+              {"★".repeat(hotel ? hotel.staff : 0)}
+              {"☆".repeat(5 - (hotel ? hotel.staff : 0))}
             </span>
           </div>
         </div>
         <div className="mb-2">Services</div>
         <div className="mb-2 flex gap-2">
-          {hotel.services.map((s, i) => (
+          {hotel?.services.map((s, i) => (
             <div
               key={i}
               className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-[#f1f3ff]"

@@ -34,7 +34,7 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
     e.preventDefault();
     const params = new URLSearchParams();
     params.append("location", String(searchData.location ?? ""));
-    router.push(`/explore?${params.toString()}`);
+    router.push(`/hotels/?${params.toString()}`);
   };
 
   // Service tabs data

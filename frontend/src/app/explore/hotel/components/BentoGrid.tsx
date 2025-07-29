@@ -7,9 +7,16 @@ const BentoGrid = ({
   hotel,
   variant,
 }: {
-  hotel: Hotel;
+  hotel: Hotel | undefined;
   variant: "desktop" | "mobile";
 }): JSX.Element => {
+  if (!hotel) {
+    return (
+      <div className="flex h-96 items-center justify-center rounded-xl bg-gray-200">
+        <p className="text-gray-500">Loading images...</p>
+      </div>
+    );
+  }
   if (variant === "mobile") {
     return (
       <div className="grid h-64 w-full grid-cols-2 grid-rows-3 gap-4">

@@ -11,24 +11,24 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const router = useRouter();
   const [hotels, setHotels] = useState(mockHotels);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch all hotels for RecentSearches only (not for main display)
   useEffect(() => {
     const fetchHotels = async () => {
       try {
+        setIsLoading(true);
         const response = await api.get("/search");
         setHotels(response.data);
       } catch (error) {
         console.error("Error fetching hotels:", error);
         setHotels(mockHotels); // fallback
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchHotels();
   }, []);
-
-  const handleSearch = (criteria: { location: string }) => {
-    router.push(`/hotels/${encodeURIComponent(criteria.location)}`);
-  };
 
   return (
     <div className="flex h-full w-full bg-[#f7f8fd]">
@@ -47,7 +47,7 @@ export default function Home() {
             />
 
             {/* Search Form Component */}
-            <SearchForm variant="desktop" onSearch={handleSearch} />
+            <SearchForm variant="desktop" />
           </div>
 
           {/* Recent Searches Component */}
@@ -55,6 +55,7 @@ export default function Home() {
             hotels={hotels}
             title="Recent Searches"
             variant="desktop"
+            isLoading={isLoading}
           />
         </section>
 
@@ -77,13 +78,14 @@ export default function Home() {
           />
 
           {/* Search Form Component สำหรับ Mobile */}
-          <SearchForm variant="mobile" onSearch={handleSearch} />
+          <SearchForm variant="mobile" />
 
           {/* Recent Searches Component สำหรับ Mobile */}
           <RecentSearches
             hotels={hotels}
             title="Recent Searches"
             variant="mobile"
+            isLoading={isLoading}
           />
         </section>
       </div>

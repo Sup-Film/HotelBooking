@@ -6,12 +6,14 @@ interface RecentSearchesProps {
   hotels: Hotel[]; // รายการโรงแรมที่จะแสดง
   title?: string; // หัวข้อของ section
   variant?: "desktop" | "mobile";
+  isLoading?: boolean; // สถานะการโหลดข้อมูล
 }
 
 export function RecentSearches({
   hotels,
   title = "Recent Searches",
   variant = "desktop",
+  isLoading = false,
 }: RecentSearchesProps) {
   // ฟังก์ชันสำหรับจัดการการเลือกโรงแรม
   const handleHotelBooking = (hotelId: string) => {
@@ -19,11 +21,26 @@ export function RecentSearches({
     console.log(`Booking hotel with ID: ${hotelId}`);
   };
 
-  // ถ้าไม่มีข้อมูลโรงแรม ไม่แสดงอะไร
+  // แสดง Loading state ขณะโหลดข้อมูล
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+        <div className="py-8 text-center">
+          <p className="text-blue-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ถ้าไม่มีข้อมูลโรงแรมหลังจากโหลดเสร็จแล้ว
   if (!hotels || hotels.length === 0) {
     return (
-      <div className="py-8 text-center">
-        <p className="text-gray-500">No hotels found</p>
+      <div className="w-full">
+        <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+        <div className="py-8 text-center">
+          <p className="text-gray-500">No hotels found</p>
+        </div>
       </div>
     );
   }

@@ -22,7 +22,7 @@ const CardBestPlace = ({
       {bestPlaces.map((place) => (
         <div key={place.name} className="flex flex-col">
           <Image
-            src={place.image}
+            src={place.image[0]}
             alt={place.name}
             width={400}
             height={220}

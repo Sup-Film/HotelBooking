@@ -10,9 +10,17 @@ export interface Hotel {
   name: string;
   location: string;
   price: number;
-  image: string;
+  image: string[];           // เปลี่ยนเป็น array ของ images
+  rating: number;
+  reviews: number;
+  housekeeping: number;
+  food: number;
+  service: number;
+  staff: number;
+  services: string[];
   description: string;
   rooms: Room[];
+  amenities?: string[];      // เพิ่ม amenities field
 }
 
 // ข้อมูลสำหรับ amenity icon mapping

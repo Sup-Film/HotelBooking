@@ -17,9 +17,16 @@ export const mockHotels: Hotel[] = [
     rating: 4.9,
     reviews: 1368,
     price: 1000,
-    image: "/images/hotel.png",
+    image: ["/images/hotel.png", "/images/p_01.png", "/images/p_02.png"],
     amenities: ["shower", "car", "wine", "wifi", "more"],
     location: "Pattaya",
+    housekeeping: 5,
+    food: 4,
+    service: 5,
+    staff: 5,
+    services: ["Room Service", "Spa", "Pool"],
+    description: "Luxury hotel with excellent amenities",
+    rooms: []
   },
   {
     id: "holiday-inn-goa",
@@ -27,9 +34,16 @@ export const mockHotels: Hotel[] = [
     rating: 4.8,
     reviews: 2456,
     price: 1200,
-    image: "/images/hotel.png",
+    image: ["/images/hotel.png", "/images/p_01.png", "/images/p_02.png"],
     amenities: ["shower", "wifi", "car", "wine"],
     location: "Goa",
+    housekeeping: 4,
+    food: 4,
+    service: 4,
+    staff: 4,
+    services: ["Beach Access", "Restaurant", "Bar"],
+    description: "Beautiful resort on the beach",
+    rooms: []
   },
   {
     id: "nobu-chicago",
@@ -37,9 +51,16 @@ export const mockHotels: Hotel[] = [
     rating: 4.7,
     reviews: 1892,
     price: 1500,
-    image: "/images/hotel.png",
+    image: ["/images/hotel.png", "/images/p_01.png", "/images/p_02.png"],
     amenities: ["shower", "wifi", "wine", "more"],
     location: "Chicago",
+    housekeeping: 5,
+    food: 5,
+    service: 5,
+    staff: 5,
+    services: ["Fine Dining", "Concierge", "Valet"],
+    description: "Premium hotel in downtown Chicago",
+    rooms: []
   },
 ];
 
