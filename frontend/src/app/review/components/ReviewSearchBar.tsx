@@ -1,16 +1,18 @@
 "use client";
-import { useState } from "react";
 
 const SearchBar = ({
   variant,
-  checkIn,
-  checkOut,
   guests,
+  bookingData,
+  onBookingChange,
 }: {
   variant: "desktop" | "mobile";
-  checkIn?: string;
-  checkOut?: string;
   guests?: string;
+  bookingData?: {
+    checkIn: string;
+    checkOut: string;
+  };
+  onBookingChange: (field: string, value: string) => void;
 }) => {
   // console.log(guests)
   const formatDate = (dateStr: string | undefined) => {
@@ -20,8 +22,9 @@ const SearchBar = ({
     return d.toISOString().slice(0, 10);
   };
 
-  const [checkInValue, setCheckInValue] = useState(formatDate(checkIn));
-  const [checkOutValue, setCheckOutValue] = useState(formatDate(checkOut));
+  const handleBookingChange = (field: string, value: string) => {
+    onBookingChange(field, value);
+  };
 
   if (variant === "mobile") {
     return (
@@ -34,14 +37,14 @@ const SearchBar = ({
         <div className="flex w-full">
           <input
             type="date"
-            value={checkInValue}
-            onChange={(e) => setCheckInValue(e.target.value)}
+            value={formatDate(bookingData?.checkIn)}
+            onChange={(e) => handleBookingChange("checkIn", e.target.value)}
             className="flex-1 border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
           />
           <input
             type="date"
-            value={checkOutValue}
-            onChange={(e) => setCheckOutValue(e.target.value)}
+            value={formatDate(bookingData?.checkOut)}
+            onChange={(e) => handleBookingChange("checkOut", e.target.value)}
             className="flex-1 border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
           />
         </div>
@@ -71,14 +74,14 @@ const SearchBar = ({
       <div>
         <input
           type="date"
-          value={checkInValue}
-          onChange={(e) => setCheckInValue(e.target.value)}
+          value={formatDate(bookingData?.checkIn)}
+          onChange={(e) => handleBookingChange("checkIn", e.target.value)}
           className="w-[150px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
         />
         <input
           type="date"
-          value={checkOutValue}
-          onChange={(e) => setCheckOutValue(e.target.value)}
+          value={formatDate(bookingData?.checkOut)}
+          onChange={(e) => handleBookingChange("checkOut", e.target.value)}
           className="w-[150px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none"
         />
       </div>

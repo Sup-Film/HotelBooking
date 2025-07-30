@@ -14,7 +14,6 @@ import { Hotel } from "@/types";
 import { useBooking } from "@/context/BookingContext";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
-
 interface PriceResponse {
   nights: number;
   price: number;
@@ -25,14 +24,16 @@ interface PriceResponse {
 const ReviewHotelPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { bookingDetails, setBookingDetails } = useBooking();
+  const { setBookingDetails } = useBooking();
 
   // รับ param จาก query string
   const hotelId = searchParams.get("hotelId") || "";
   const roomType = searchParams.get("roomType") || "Deluxe Room";
-  const checkIn = searchParams.get("checkIn") || "";
-  const checkOut = searchParams.get("checkOut") || "";
   const guests = searchParams.get("guests") || "1";
+
+  // ใช้ state สำหรับวันที่ checkin/checkout
+  const [checkIn, setCheckIn] = useState(searchParams.get("checkIn") || "");
+  const [checkOut, setCheckOut] = useState(searchParams.get("checkOut") || "");
 
   // State สำหรับข้อมูลราคา (mockup fallback)
   const [hotel, setHotel] = useState<Hotel | null>(null);
@@ -56,16 +57,12 @@ const ReviewHotelPage = () => {
       try {
         const response = await api.get(`/${hotelId}`);
         setHotel(response.data);
-        // console.log("Fetched hotel data:", response.data);
         const nights = getNights(checkIn, checkOut);
-
         const priceResponse = await api.post("/calculate-cost", {
           hotelId: hotelId,
           roomType: roomType,
           days: nights,
         });
-        // console.log("Price response:", priceResponse.data);
-
         setPriceInfo({
           nights: nights,
           price: priceResponse.data.subtotal,
@@ -87,7 +84,7 @@ const ReviewHotelPage = () => {
       }
     };
     fetchHotelData();
-  }, [hotelId, roomType, checkIn, checkOut]);
+  }, [hotelId, roomType, checkIn, checkOut, setBookingDetails]);
 
   const [guestDetails, setGuestDetails] = useState<GuestDetails>({
     firstName: "",
@@ -156,14 +153,22 @@ const ReviewHotelPage = () => {
           {/* Search Bar (mock) */}
           <ReviewSearchBar
             variant="desktop"
-            checkIn={checkIn}
-            checkOut={checkOut}
             guests={guests}
+            bookingData={{ checkIn, checkOut }}
+            onBookingChange={(field, value) => {
+              if (field === "checkIn") setCheckIn(value);
+              if (field === "checkOut") setCheckOut(value);
+            }}
           />
         </div>
         {loading ? (
           <div className="flex h-full items-center justify-center">
-            <LoadingSkeleton width="w-full" height="h-96" rounded="rounded-xl" lines={1} />
+            <LoadingSkeleton
+              width="w-full"
+              height="h-96"
+              rounded="rounded-xl"
+              lines={1}
+            />
           </div>
         ) : hotel ? (
           <div className="flex w-full gap-8 px-8 py-8">
@@ -222,15 +227,23 @@ const ReviewHotelPage = () => {
           <ExploreSearchBar variant="mobile" />
           <ReviewSearchBar
             variant="mobile"
-            checkIn={checkIn}
-            checkOut={checkOut}
             guests={guests}
+            bookingData={{ checkIn, checkOut }}
+            onBookingChange={(field, value) => {
+              if (field === "checkIn") setCheckIn(value);
+              if (field === "checkOut") setCheckOut(value);
+            }}
           />
         </div>
 
         {loading ? (
           <div className="flex h-full items-center justify-center">
-            <LoadingSkeleton width="w-full" height="h-64" rounded="rounded-xl" lines={1} />
+            <LoadingSkeleton
+              width="w-full"
+              height="h-64"
+              rounded="rounded-xl"
+              lines={1}
+            />
           </div>
         ) : hotel ? (
           <div className="flex w-full gap-8 px-4 py-8">
