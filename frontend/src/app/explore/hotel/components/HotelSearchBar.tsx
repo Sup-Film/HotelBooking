@@ -64,7 +64,7 @@ const SearchBar = ({
               key={idx}
               value={`${opt.adults}-${opt.children}-${opt.rooms}`}
             >
-              {`${opt.adults} ผู้ใหญ่, ${opt.children} เด็ก, ${opt.rooms} ห้อง`}
+              {`${opt.adults} Adult, ${opt.children} Child, ${opt.rooms} Room`}
             </option>
           ))}
         </select>
@@ -118,7 +118,7 @@ const SearchBar = ({
             key={idx}
             value={`${opt.adults}-${opt.children}-${opt.rooms}`}
           >
-            {`${opt.adults} ผู้ใหญ่, ${opt.children} เด็ก, ${opt.rooms} ห้อง`}
+            {`${opt.adults} Adult, ${opt.children} Child, ${opt.rooms} Room`}
           </option>
         ))}
       </select>

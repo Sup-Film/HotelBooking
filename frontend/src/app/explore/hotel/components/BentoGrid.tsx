@@ -2,8 +2,10 @@
 import Image from "next/image";
 import { JSX } from "react";
 import { Hotel } from "@/types/index";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 const BentoGrid = ({
+
   hotel,
   variant,
 }: {
@@ -13,7 +15,7 @@ const BentoGrid = ({
   if (!hotel) {
     return (
       <div className="flex h-96 items-center justify-center rounded-xl bg-gray-200">
-        <p className="text-gray-500">Loading images...</p>
+        <LoadingSkeleton width="w-full" height="h-96" rounded="rounded-xl" lines={1} />
       </div>
     );
   }

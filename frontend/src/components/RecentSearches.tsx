@@ -1,6 +1,7 @@
 "use client";
 import { Hotel } from "@/types";
 import HotelCard from "./Hotelcard";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 interface RecentSearchesProps {
   hotels: Hotel[]; // รายการโรงแรมที่จะแสดง
@@ -26,8 +27,17 @@ export function RecentSearches({
     return (
       <div className="w-full">
         <h3 className="mb-4 text-lg font-semibold">{title}</h3>
-        <div className="py-8 text-center">
-          <p className="text-blue-500">Loading...</p>
+        <div className={variant === "desktop" ? "flex flex-col gap-4" : "flex flex-row gap-x-5 overflow-x-auto pb-2"}>
+          {/* Skeleton สำหรับแต่ละ card */}
+          {Array.from({ length: variant === "desktop" ? 3 : 2 }).map((_, i) => (
+            <LoadingSkeleton
+              key={i}
+              width={variant === "desktop" ? "w-full" : "w-64"}
+              height={variant === "desktop" ? "h-40" : "h-32"}
+              rounded="rounded-xl"
+              className=""
+            />
+          ))}
         </div>
       </div>
     );
@@ -71,14 +81,14 @@ export function RecentSearches({
 
       {/* Container สำหรับ horizontal scrolling */}
       <div className="flex flex-row items-center gap-x-5 overflow-x-auto pb-2">
-        {/* {hotels.map((hotel) => (
+        {hotels.map((hotel) => (
           <HotelCard
             key={hotel.id}
             hotel={hotel}
             variant="mobile"
             onBooking={handleHotelBooking}
           />
-        ))} */}
+        ))}
       </div>
     </div>
   );

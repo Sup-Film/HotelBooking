@@ -63,7 +63,7 @@ export default function ExplorePage() {
               </div>
             </div>
             {isLoading ? (
-              <LoadingSkeleton />
+              <LoadingSkeleton width="w-full" height="h-96" rounded="rounded-xl" lines={1} />
             ) : hotels.length === 0 ? (
               <div className="py-8 text-center text-gray-500">
                 No hotels found
@@ -113,7 +113,7 @@ export default function ExplorePage() {
         </div>
         {/* Best Places Card */}
         {isLoading ? (
-          <div className="py-8 text-center text-blue-500">Loading...</div>
+          <LoadingSkeleton width="w-full" height="h-32" rounded="rounded-xl" lines={2} />
         ) : hotels.length === 0 ? (
           <div className="py-8 text-center text-gray-500">No hotels found</div>
         ) : (

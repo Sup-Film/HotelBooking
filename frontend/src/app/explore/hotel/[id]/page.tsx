@@ -9,6 +9,7 @@ import RoomCard from "../components/RoomCard";
 import { Hotel } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/api";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 interface BookingData {
   checkIn: string;
@@ -32,14 +33,13 @@ const ExploreHotelPage = () => {
     rooms: 1,
   });
 
-  console.log("Booking Data:", bookingData);
-
   const handleBookingChange = (field: string, value: string | number) => {
     setBookingData((prev) => ({ ...prev, [field]: value }));
   };
 
   useEffect(() => {
     const fetchHotel = async () => {
+      console.log(isLoading);
       if (!id) {
         console.error("Hotel ID is not provided");
         setIsLoading(false);
@@ -49,16 +49,15 @@ const ExploreHotelPage = () => {
       try {
         const response = await api.get(`/${id}`);
         setHotels(response.data);
+        setIsLoading(false);
         console.log("Fetched hotel data:", response.data);
       } catch (error) {
         console.error("Error fetching hotel data:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchHotel();
-  }, [id]);
+  }, [id, isLoading]);
 
   return (
     <div className="flex h-full w-full bg-[#f7f8fd]">
@@ -82,10 +81,15 @@ const ExploreHotelPage = () => {
         />
 
         {/* Main Content: Left-Right Section */}
+        
         {isLoading ? (
-          // Skeleton Loader
-          <div className="flex flex-1 items-center justify-center">
-            <p className="text-gray-500">Loading...</p>
+          <div className="flex items-center justify-center">
+            <LoadingSkeleton
+              width="w-[90dvw]"
+              height="h-[70dvh]"
+              rounded="rounded-xl"
+              lines={1}
+            />
           </div>
         ) : hotels ? (
           <div className="flex gap-16 px-8 py-6">
@@ -141,9 +145,13 @@ const ExploreHotelPage = () => {
 
         {/* Main Content with Loading State */}
         {isLoading ? (
-          // Skeleton Loader for Mobile
           <div className="flex flex-1 items-center justify-center">
-            <p className="text-gray-500">Loading...</p>
+            <LoadingSkeleton
+              width="w-full"
+              height="h-64"
+              rounded="rounded-xl"
+              lines={1}
+            />
           </div>
         ) : hotels ? (
           <>

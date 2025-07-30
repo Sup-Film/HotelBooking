@@ -12,6 +12,8 @@ import ReviewSearchBar from "./components/ReviewSearchBar";
 import api from "@/lib/api";
 import { Hotel } from "@/types";
 import { useBooking } from "@/context/BookingContext";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+
 
 interface PriceResponse {
   nights: number;
@@ -161,7 +163,7 @@ const ReviewHotelPage = () => {
         </div>
         {loading ? (
           <div className="flex h-full items-center justify-center">
-            <p>Loading...</p>
+            <LoadingSkeleton width="w-full" height="h-96" rounded="rounded-xl" lines={1} />
           </div>
         ) : hotel ? (
           <div className="flex w-full gap-8 px-8 py-8">
@@ -228,7 +230,7 @@ const ReviewHotelPage = () => {
 
         {loading ? (
           <div className="flex h-full items-center justify-center">
-            <p>Loading...</p>
+            <LoadingSkeleton width="w-full" height="h-64" rounded="rounded-xl" lines={1} />
           </div>
         ) : hotel ? (
           <div className="flex w-full gap-8 px-4 py-8">

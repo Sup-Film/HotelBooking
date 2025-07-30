@@ -119,7 +119,7 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
             placeholder="Thu,28 Jan-2021"
             value={searchData.checkIn}
             onChange={(e) => updateField("checkIn", e.target.value)}
-            className={`flex-1 px-${variant === "mobile" ? "3" : "6"} py-${
+            className={`flex-1 w-full px-${variant === "mobile" ? "3" : "6"} py-${
               variant === "mobile" ? "2" : "3"
             } bg-blue-100 text-gray-700 shadow text-${
               variant === "mobile" ? "sm" : "lg"
@@ -134,7 +134,7 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
             placeholder="Fri,29 Jan-2021"
             value={searchData.checkOut}
             onChange={(e) => updateField("checkOut", e.target.value)}
-            className={`flex-1 px-${variant === "mobile" ? "3" : "6"} py-${
+            className={`flex-1 w-full px-${variant === "mobile" ? "3" : "6"} py-${
               variant === "mobile" ? "2" : "3"
             } bg-blue-100 text-gray-700 shadow text-${
               variant === "mobile" ? "sm" : "lg"
