@@ -80,17 +80,7 @@ const BentoGrid = ({
             />
           </div>
         </div>
-        <div className="col-start-3 row-start-3">
-          <div className="relative h-full w-full">
-            <Image
-              src={hotel.image[2]}
-              alt={hotel.name}
-              fill
-              className="rounded-xl object-cover"
-            />
-          </div>
-        </div>
-        <div className="col-start-4 row-start-3">
+        <div className="col-start-3 col-span-2 row-start-3">
           <div className="relative h-full w-full">
             <Image
               src={hotel.image[2]}
