@@ -56,7 +56,7 @@ const ReviewHotelPage = () => {
       try {
         const response = await api.get(`/${hotelId}`);
         setHotel(response.data);
-        console.log("Fetched hotel data:", response.data);
+        // console.log("Fetched hotel data:", response.data);
         const nights = getNights(checkIn, checkOut);
 
         const priceResponse = await api.post("/calculate-cost", {
@@ -64,7 +64,7 @@ const ReviewHotelPage = () => {
           roomType: roomType,
           days: nights,
         });
-        console.log("Price response:", priceResponse.data);
+        // console.log("Price response:", priceResponse.data);
 
         setPriceInfo({
           nights: nights,
@@ -134,7 +134,7 @@ const ReviewHotelPage = () => {
     if (validate()) {
       // ถ้าไม่มี Error, ไปยังหน้า payment
       setBookingDetails({ guestDetails });
-      console.log("Validation passed. Navigating to payment...");
+      // console.log("Validation passed. Navigating to payment...");
       router.push("/payment");
     } else {
       console.log("Validation failed.");

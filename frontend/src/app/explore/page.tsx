@@ -83,12 +83,14 @@ export default function Home() {
 
         {/* Section Content สำหรับ Mobile */}
         <section className="flex flex-col overflow-hidden p-5">
-          {/* Global Search Bar สำหรับ Mobile */}
-          <input
-            type="text"
-            placeholder="Search city , Country, Place for Travel advisory"
-            className="mb-2 w-full rounded-lg bg-[#e9ebf5] px-6 py-2 text-sm text-gray-700 outline-none transition-shadow focus:ring-2 focus:ring-blue-500"
-          />
+          <form action="" onSubmit={handleSearch} className="mb-8">
+            {/* Global Search Bar สำหรับ Mobile */}
+            <input
+              type="text"
+              placeholder="Search city , Country, Place for Travel advisory"
+              className="mb-2 w-full rounded-lg bg-[#e9ebf5] px-6 py-2 text-sm text-gray-700 outline-none transition-shadow focus:ring-2 focus:ring-blue-500"
+            />
+          </form>
 
           {/* Search Form Component สำหรับ Mobile */}
           <SearchForm variant="mobile" />

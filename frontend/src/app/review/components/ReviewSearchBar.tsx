@@ -12,7 +12,7 @@ const SearchBar = ({
   checkOut?: string;
   guests?: string;
 }) => {
-  console.log(guests)
+  // console.log(guests)
   const formatDate = (dateStr: string | undefined) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);

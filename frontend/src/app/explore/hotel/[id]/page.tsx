@@ -39,7 +39,7 @@ const ExploreHotelPage = () => {
 
   useEffect(() => {
     const fetchHotel = async () => {
-      console.log(isLoading);
+      // console.log(isLoading);
       if (!id) {
         console.error("Hotel ID is not provided");
         setIsLoading(false);
@@ -50,7 +50,7 @@ const ExploreHotelPage = () => {
         const response = await api.get(`/${id}`);
         setHotels(response.data);
         setIsLoading(false);
-        console.log("Fetched hotel data:", response.data);
+        // console.log("Fetched hotel data:", response.data);
       } catch (error) {
         console.error("Error fetching hotel data:", error);
       }

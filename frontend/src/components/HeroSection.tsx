@@ -17,7 +17,7 @@ export function HeroSection({
     if (onTakeTour) {
       onTakeTour();
     } else {
-      console.log("Take tour clicked");
+      // console.log("Take tour clicked");
     }
   };
 
