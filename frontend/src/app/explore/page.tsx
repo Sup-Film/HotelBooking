@@ -8,11 +8,33 @@ import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface BookingData {
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children: number;
+  rooms: number;
+}
+
 export default function Home() {
   const router = useRouter();
   const [hotels, setHotels] = useState(mockHotels);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [bookingData, setBookingData] = useState<BookingData>({
+    checkIn: "",
+    checkOut: "",
+    adults: 2,
+    children: 1,
+    rooms: 1,
+  });
+
+  // console.log("Booking Data:", bookingData);
+
+  const handleBookingChange = (field: string, value: string | number) => {
+    setBookingData((prev) => ({ ...prev, [field]: value }));
+  };
 
   // ฟังก์ชันสำหรับจัดการการค้นหา
   const handleSearch = (e: React.FormEvent) => {
@@ -60,7 +82,11 @@ export default function Home() {
             </form>
 
             {/* Search Form Component */}
-            <SearchForm variant="desktop" />
+            <SearchForm
+              variant="desktop"
+              bookingData={bookingData}
+              onBookingChange={handleBookingChange}
+            />
           </div>
 
           {/* Recent Searches Component */}
@@ -69,6 +95,7 @@ export default function Home() {
             title="Recent Searches"
             variant="desktop"
             isLoading={isLoading}
+            bookingData={bookingData}
           />
         </section>
 
@@ -93,7 +120,11 @@ export default function Home() {
           </form>
 
           {/* Search Form Component สำหรับ Mobile */}
-          <SearchForm variant="mobile" />
+          <SearchForm
+            variant="mobile"
+            bookingData={bookingData}
+            onBookingChange={handleBookingChange}
+          />
 
           {/* Recent Searches Component สำหรับ Mobile */}
           <RecentSearches
@@ -101,6 +132,7 @@ export default function Home() {
             title="Recent Searches"
             variant="mobile"
             isLoading={isLoading}
+            bookingData={bookingData}
           />
         </section>
       </div>

@@ -11,7 +11,7 @@ interface HotelCardProps {
   hotel: Hotel;
   room: Room;
   variant?: "desktop" | "mobile";
-  onBooking?: (hotelId: string) => void;
+  onBooking?: (hotelId: string, room: string) => void;
 }
 
 export function HotelCard({
@@ -57,7 +57,7 @@ export function HotelCard({
   // ฟังก์ชันสำหรับ handle การกดปุ่ม Book Now
   const handleBooking = () => {
     if (onBooking) {
-      onBooking(hotel.id);
+      onBooking(hotel.id, room.type);
     }
   };
 

@@ -5,35 +5,49 @@ import { SearchCriteria, ServiceType } from "@/types";
 import { FaHotel, FaPlane, FaCar } from "react-icons/fa";
 
 interface SearchFormProps {
-  onSearch?: (criteria: SearchCriteria) => void;
+  onSearch?: (criteria: string) => void;
   variant?: "desktop" | "mobile";
+  bookingData: {
+    checkIn: string;
+    checkOut: string;
+    adults: number;
+    children: number;
+    rooms: number;
+  };
+  onBookingChange: (field: string, value: string | number) => void;
 }
 
-export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
+const options = [
+  { adults: 1, children: 0, rooms: 1 },
+  { adults: 2, children: 0, rooms: 1 },
+  { adults: 2, children: 1, rooms: 1 },
+  { adults: 2, children: 2, rooms: 2 },
+  // เพิ่มตัวเลือกตามต้องการ
+];
+
+export function SearchForm({
+  onSearch,
+  variant = "desktop",
+  bookingData = { checkIn: "", checkOut: "", adults: 1, children: 0, rooms: 1 },
+  onBookingChange,
+}: SearchFormProps) {
   const router = useRouter();
   // State สำหรับเก็บข้อมูลการค้นหา
-  const [searchData, setSearchData] = useState<SearchCriteria>({
-    location: "",
-    checkIn: "",
-    checkOut: "",
-    adults: 2,
-    children: 1,
-    rooms: 1,
-  });
+  const [location, setLocation] = useState("");
 
   // State สำหรับ active service tab
   const [activeService, setActiveService] = useState<ServiceType>("hotel");
 
-  // ฟังก์ชันสำหรับอัพเดต field ต่างๆ
-  const updateField = (field: keyof SearchCriteria, value: string | number) => {
-    setSearchData((prev) => ({ ...prev, [field]: value }));
+  // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงการจอง
+  const handleBookingChange = (field: string, value: string | number) => {
+    onBookingChange(field, value);
   };
 
   // ฟังก์ชันสำหรับ submit form (ใช้ query string)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    params.append("location", String(searchData.location ?? ""));
+    params.append("location", String(location ?? ""));
     router.push(`/hotels/?${params.toString()}`);
   };
 
@@ -103,8 +117,8 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
         <input
           type="text"
           placeholder="Pattaya"
-          value={searchData.location}
-          onChange={(e) => updateField("location", e.target.value)}
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           className={inputClass}
         />
 
@@ -115,11 +129,11 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
           }`}
         >
           <input
-            type="text"
+            type="Date"
             placeholder="Thu,28 Jan-2021"
-            value={searchData.checkIn}
-            onChange={(e) => updateField("checkIn", e.target.value)}
-            className={`flex-1 w-full px-${variant === "mobile" ? "3" : "6"} py-${
+            value={bookingData.checkIn}
+            onChange={(e) => handleBookingChange("checkIn", e.target.value)}
+            className={`w-full flex-1 px-${variant === "mobile" ? "3" : "6"} py-${
               variant === "mobile" ? "2" : "3"
             } bg-blue-100 text-gray-700 shadow text-${
               variant === "mobile" ? "sm" : "lg"
@@ -130,11 +144,11 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
             }`}
           />
           <input
-            type="text"
+            type="Date"
             placeholder="Fri,29 Jan-2021"
-            value={searchData.checkOut}
-            onChange={(e) => updateField("checkOut", e.target.value)}
-            className={`flex-1 w-full px-${variant === "mobile" ? "3" : "6"} py-${
+            value={bookingData.checkOut}
+            onChange={(e) => handleBookingChange("checkOut", e.target.value)}
+            className={`w-full flex-1 px-${variant === "mobile" ? "3" : "6"} py-${
               variant === "mobile" ? "2" : "3"
             } bg-blue-100 text-gray-700 shadow text-${
               variant === "mobile" ? "sm" : "lg"
@@ -145,16 +159,41 @@ export function SearchForm({ onSearch, variant = "desktop" }: SearchFormProps) {
         </div>
 
         {/* Guests Input */}
-        <input
+        <select
+          className={`${
+            variant === "mobile"
+              ? "mx-auto w-full max-w-[350px] rounded border-2 border-blue-300 bg-blue-100 px-3 py-2 text-sm text-gray-700 shadow outline-none"
+              : "w-full rounded-lg bg-blue-100 px-6 py-3 text-lg text-gray-700 shadow outline-none"
+          }`}
+          value={`${bookingData.adults}-${bookingData.children}-${bookingData.rooms}`}
+          onChange={(e) => {
+            const [adults, children, rooms] = e.target.value
+              .split("-")
+              .map(Number);
+            handleBookingChange("adults", adults);
+            handleBookingChange("children", children);
+            handleBookingChange("rooms", rooms);
+          }}
+        >
+          {options.map((opt, idx) => (
+            <option
+              key={idx}
+              value={`${opt.adults}-${opt.children}-${opt.rooms}`}
+            >
+              {`${opt.adults} Adult, ${opt.children} Child, ${opt.rooms} Room`}
+            </option>
+          ))}
+        </select>
+        {/* <input
           type="text"
-          value={`${searchData.adults} adult, ${searchData.children} children - ${searchData.rooms} room`}
+          value={`${bookingData.adults} adult, ${bookingData.children} children - ${bookingData.rooms} room`}
           readOnly
           className={`${
             variant === "mobile"
               ? "mx-auto w-full max-w-[350px] rounded border-2 border-blue-300 bg-blue-100 px-3 py-2 text-sm text-gray-700 shadow outline-none"
               : "w-full rounded-lg bg-blue-100 px-6 py-3 text-lg text-gray-700 shadow outline-none"
           }`}
-        />
+        /> */}
 
         {/* Search Button */}
         <button

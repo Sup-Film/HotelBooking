@@ -9,6 +9,13 @@ interface RecentSearchesProps {
   title?: string; // หัวข้อของ section
   variant?: "desktop" | "mobile";
   isLoading?: boolean; // สถานะการโหลดข้อมูล
+  bookingData?: {
+    checkIn: string;
+    checkOut: string;
+    adults: number;
+    children: number;
+    rooms: number;
+  };
 }
 
 export function RecentSearches({
@@ -16,9 +23,38 @@ export function RecentSearches({
   title = "Recent Searches",
   variant = "desktop",
   isLoading = false,
+  bookingData = { checkIn: "", checkOut: "", adults: 1, children: 0, rooms: 1 },
 }: RecentSearchesProps) {
+  const router = useRouter();
+
   // ฟังก์ชันสำหรับจัดการการเลือกโรงแรม
-  const handleHotelBooking = (hotelId: string) => {};
+  const handleHotelBooking = (hotelId: string, room: string) => {
+    if (!bookingData.checkIn || !bookingData.checkOut) {
+      alert("Please select Check-in and Check-out dates.");
+      return;
+    }
+    
+    const checkInDate = new Date(bookingData.checkIn);
+    const checkOutDate = new Date(bookingData.checkOut);
+
+    if (checkOutDate <= checkInDate) {
+      alert("Check-out date must be after Check-in date.");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.append("hotelId", hotelId);
+    params.append("roomType", room);
+    params.append("checkIn", bookingData.checkIn);
+    params.append("checkOut", bookingData.checkOut);
+    params.append("rooms", bookingData.rooms.toString());
+    params.append(
+      "guests",
+      `${bookingData.adults} Adults, ${bookingData.children} Children`,
+    );
+
+    router.push(`/review?${params.toString()}`);
+  };
 
   // แสดง Loading state ขณะโหลดข้อมูล
   if (isLoading) {
