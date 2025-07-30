@@ -5,6 +5,8 @@ import {
   EXPLORE_SEARCH_BAR_CONFIGS,
   ExploreSearchBarConfigKey,
 } from "@/types/exploreSearchBarConfigs";
+import { useRouter } from "next/navigation";
+
 
 interface ExploreSearchBarProps {
   variant: "desktop" | "mobile";
@@ -17,17 +19,15 @@ const ExploreSearchBar = ({
   variant,
   configKey = "explore",
   onBack,
-  onSearch,
 }: ExploreSearchBarProps) => {
+  const router = useRouter();
   // ดึงค่าการตั้งค่าจาก config ตาม key ที่กำหนด
   const config = EXPLORE_SEARCH_BAR_CONFIGS[configKey];
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(searchQuery);
-    }
+    router.push(`/hotels?location=${searchQuery}`);
   };
 
   // Handler สำหรับปุ่มย้อนกลับ

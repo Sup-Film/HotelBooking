@@ -2,6 +2,7 @@
 import { Hotel } from "@/types";
 import HotelCard from "./Hotelcard";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { useRouter } from "next/navigation";
 
 interface RecentSearchesProps {
   hotels: Hotel[]; // รายการโรงแรมที่จะแสดง
@@ -17,17 +18,20 @@ export function RecentSearches({
   isLoading = false,
 }: RecentSearchesProps) {
   // ฟังก์ชันสำหรับจัดการการเลือกโรงแรม
-  const handleHotelBooking = (hotelId: string) => {
-    // นำทางไปยังหน้าจองโรงแรม
-    console.log(`Booking hotel with ID: ${hotelId}`);
-  };
+  const handleHotelBooking = (hotelId: string) => {};
 
   // แสดง Loading state ขณะโหลดข้อมูล
   if (isLoading) {
     return (
       <div className="w-full">
         <h3 className="mb-4 text-lg font-semibold">{title}</h3>
-        <div className={variant === "desktop" ? "flex flex-col gap-4" : "flex flex-row gap-x-5 overflow-x-auto pb-2"}>
+        <div
+          className={
+            variant === "desktop"
+              ? "flex flex-col gap-4"
+              : "flex flex-row gap-x-5 overflow-x-auto pb-2"
+          }
+        >
           {/* Skeleton สำหรับแต่ละ card */}
           {Array.from({ length: variant === "desktop" ? 3 : 2 }).map((_, i) => (
             <LoadingSkeleton
@@ -61,14 +65,17 @@ export function RecentSearches({
       <div className="w-full">
         <h3 className="mb-4 text-lg font-semibold">{title}</h3>
         <div className="flex flex-col gap-4">
-          {hotels.map((hotel) => (
-            <HotelCard
-              key={hotel.id}
-              hotel={hotel}
-              variant="desktop"
-              onBooking={handleHotelBooking}
-            />
-          ))}
+          {hotels.map((hotel) =>
+            hotel.rooms.map((room, idx) => (
+              <HotelCard
+                key={idx}
+                hotel={hotel}
+                room={room}
+                variant="desktop"
+                onBooking={handleHotelBooking}
+              />
+            )),
+          )}
         </div>
       </div>
     );
@@ -81,14 +88,17 @@ export function RecentSearches({
 
       {/* Container สำหรับ horizontal scrolling */}
       <div className="flex flex-row items-center gap-x-5 overflow-x-auto pb-2">
-        {hotels.map((hotel) => (
-          <HotelCard
-            key={hotel.id}
-            hotel={hotel}
-            variant="mobile"
-            onBooking={handleHotelBooking}
-          />
-        ))}
+        {hotels.map((hotel) =>
+          hotel.rooms.map((room, idx) => (
+            <HotelCard
+              key={idx}
+              hotel={hotel}
+              room={room}
+              variant="mobile"
+              onBooking={handleHotelBooking}
+            />
+          )),
+        )}
       </div>
     </div>
   );

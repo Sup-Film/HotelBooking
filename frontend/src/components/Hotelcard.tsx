@@ -1,7 +1,6 @@
 // src/components/HotelCard.tsx
 import Image from "next/image";
-import { Hotel, AmenityIcon } from "@/types";
-import { amenityIcons } from "@/data/hotels";
+import { Hotel, Room } from "@/types";
 import { FaShower, FaCar } from "react-icons/fa";
 import { GiWineBottle } from "react-icons/gi";
 import { CiWifiOn } from "react-icons/ci";
@@ -10,12 +9,14 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 // Props interface สำหรับ component นี้
 interface HotelCardProps {
   hotel: Hotel;
+  room: Room;
   variant?: "desktop" | "mobile";
   onBooking?: (hotelId: string) => void;
 }
 
 export function HotelCard({
   hotel,
+  room,
   variant = "desktop",
   onBooking,
 }: HotelCardProps) {
@@ -65,7 +66,7 @@ export function HotelCard({
     return (
       <div className="flex min-w-[260px] max-w-[320px] flex-col overflow-hidden p-3">
         <Image
-          src={hotel.image[0]}
+          src={room?.image ?? hotel.image[0]}
           alt={hotel.name}
           width={280}
           height={120}
@@ -110,7 +111,7 @@ export function HotelCard({
 
           {/* Price */}
           <span className="mb-2 block font-bold text-[#2d36d9]">
-            {hotel.price}/night
+            {room?.price ?? "N/A"}/night
           </span>
         </div>
 
@@ -128,7 +129,7 @@ export function HotelCard({
   return (
     <div className="flex overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl">
       <Image
-        src={hotel.image[0]}
+        src={room?.image ?? hotel.image[0]}
         alt={hotel.name}
         width={150}
         height={80}
@@ -174,7 +175,9 @@ export function HotelCard({
         </div>
 
         {/* Price */}
-        <span className="font-bold text-[#2d36d9]">{hotel.price}/night</span>
+        <span className="font-bold text-[#2d36d9]">
+          {room?.price ?? "N/A"}/night
+        </span>
       </div>
 
       <button

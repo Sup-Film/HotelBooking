@@ -55,6 +55,11 @@
         "type": "Standard Room",
         "price": 4500,
         "image": "/images/rec-02.png"
+      },
+      {
+        "type": "Executive Suite",
+        "price": 6000,
+        "image": "/images/rec-02.png"
       }
     ]
   },

@@ -12,6 +12,15 @@ export default function Home() {
   const router = useRouter();
   const [hotels, setHotels] = useState(mockHotels);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // ฟังก์ชันสำหรับจัดการการค้นหา
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    params.append("location", searchQuery);
+    router.push(`/hotels/?${params.toString()}`);
+  };
 
   // Fetch all hotels for RecentSearches only (not for main display)
   useEffect(() => {
@@ -39,12 +48,16 @@ export default function Home() {
         {/* Left Section: Search & Recent Searches */}
         <section className="flex h-screen flex-col justify-between overflow-auto px-12 py-8">
           <div>
-            {/* Global Search Bar - ค้นหาทั่วไป */}
-            <input
-              type="text"
-              placeholder="Search city , Country, Place for Travel advisory"
-              className="mb-8 w-full rounded-lg bg-[#e9ebf5] px-6 py-3 text-lg text-gray-700 outline-none transition-shadow focus:ring-2 focus:ring-blue-500"
-            />
+            <form action="" onSubmit={handleSearch} className="mb-8">
+              {/* Global Search Bar - ค้นหาทั่วไป */}
+              <input
+                type="text"
+                placeholder="Search city , Country, Place for Travel advisory"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="mb-8 w-full rounded-lg bg-[#e9ebf5] px-6 py-3 text-lg text-gray-700 outline-none transition-shadow focus:ring-2 focus:ring-blue-500"
+              />
+            </form>
 
             {/* Search Form Component */}
             <SearchForm variant="desktop" />
