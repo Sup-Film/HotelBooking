@@ -1,56 +1,69 @@
-"use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import Sidebar from "@/components/Sidebar";
-import PaymentMethodList, {
-  PaymentMethod,
-} from "./components/PaymentMethodList";
 import PriceSummary from "../review/components/PriceSummary";
-import { FaCreditCard } from "react-icons/fa";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { SiPhonepe } from "react-icons/si";
-import { MdOutlineAccountBalance } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
-import { useBooking } from "@/context/BookingContext";
+import api from "@/lib/api";
+import PaymentClient from "./components/PaymentClient";
 
-const paymentMethods: PaymentMethod[] = [
-  {
-    id: "debit",
-    label: "Debit Card",
-    icon: <FaCreditCard size={36} className="text-blue-700" />,
-  },
-  {
-    id: "upi",
-    label: "UPI",
-    icon: <MdOutlineAccountBalanceWallet size={36} className="text-blue-700" />,
-  },
-  {
-    id: "phonepe",
-    label: "PhonePay",
-    icon: <SiPhonepe size={36} className="text-purple-700" />,
-  },
-  {
-    id: "netbanking",
-    label: "Net Banking",
-    icon: <MdOutlineAccountBalance size={36} className="text-yellow-600" />,
-  },
-  {
-    id: "credit",
-    label: "Credit Card",
-    icon: <FaCreditCard size={36} className="text-gray-700" />,
-  },
-];
+function getNights(start: string, end: string): number {
+  if (!start || !end) return 1;
+  const d1 = new Date(start);
+  const d2 = new Date(end);
+  if (isNaN(d1.getTime()) || isNaN(d2.getTime()) || d2 <= d1) {
+    return 1;
+  }
+  return Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+}
 
-const PaymentPage = () => {
-  const { bookingDetails } = useBooking();
-  const { priceInfo } = bookingDetails;
-  const [selected, setSelected] = useState("");
-  const router = useRouter();
+// Function ดึงข้อมูลราคาทำงานบน Server
+async function getPriceData(params: {
+  hotelId: string;
+  roomType: string;
+  checkIn: string;
+  checkOut: string;
+}) {
+  try {
+    const nights = getNights(params.checkIn, params.checkOut);
+    const priceResponse = await api.post("/calculate-cost", {
+      hotelId: params.hotelId,
+      roomType: params.roomType,
+      days: nights,
+    });
 
-  const handleSelect = (id: string) => {
-    setSelected(id);
-    router.push("/payment/success");
-  };
+    return {
+      nights: nights,
+      price: priceResponse.data.subtotal,
+      vat: priceResponse.data.taxesAndFees,
+      total: priceResponse.data.totalAmount,
+    };
+  } catch (error) {
+    console.error("Error fetching price data:", error);
+    return null;
+  }
+}
+
+const PaymentPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) => {
+  // รับค่าจาก Params ที่ส่งเข้ามา
+  const { hotelId, roomType, checkIn, checkOut } = searchParams;
+  // นำค่าจาก Params ส่งไปยัง getPriceData เพื่อดึงข้อมูลราคา
+  const priceInfo = await getPriceData({
+    hotelId,
+    roomType,
+    checkIn,
+    checkOut,
+  });
+
+  if (!priceInfo) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <p>Could not load payment details.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full w-full">
@@ -62,11 +75,7 @@ const PaymentPage = () => {
             <div className="mb-8 text-2xl font-semibold text-gray-800">
               Payment Details
             </div>
-            <PaymentMethodList
-              methods={paymentMethods}
-              selectedId={selected}
-              onSelect={handleSelect}
-            />
+            <PaymentClient />
           </div>
           {/* Right: Price Summary */}
           <div className="flex flex-1 flex-col items-end justify-start">
@@ -108,11 +117,7 @@ const PaymentPage = () => {
               total={priceInfo?.total ?? null}
             />
           </div>
-          <PaymentMethodList
-            methods={paymentMethods}
-            selectedId={selected}
-            onSelect={handleSelect}
-          />
+          <PaymentClient />
         </div>
       </div>
     </div>

@@ -3,81 +3,86 @@ import Image from "next/image";
 import { Hotel, Room } from "@/types/index";
 import { useRouter } from "next/navigation";
 
+interface BookingData {
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children: number;
+  rooms: number;
+}
+
 const RoomCard = ({
   hotel,
   variant,
-  bookingData = { checkIn: "", checkOut: "", adults: 1, children: 0, rooms: 1 },
+  bookingData,
 }: {
   hotel: Hotel | undefined;
   variant: "desktop" | "mobile";
-  bookingData: {
-    checkIn: string;
-    checkOut: string;
-    adults: number;
-    children: number;
-    rooms: number;
-  };
+  bookingData: BookingData;
 }) => {
   const router = useRouter();
 
   const handleBookNow = (room: Room) => {
     if (!bookingData.checkIn || !bookingData.checkOut) {
-      alert("Please select Check-in and Check-out dates.");
+      alert("Please select check-in and check-out dates.");
       return;
     }
 
-    const checkInDate = new Date(bookingData.checkIn);
-    const checkOutDate = new Date(bookingData.checkOut);
-
-    if (checkOutDate <= checkInDate) {
-      alert("Check-out date must be after Check-in date.");
+    const checkInData = new Date(bookingData.checkIn);
+    const checkOutData = new Date(bookingData.checkOut);
+    if (checkInData >= checkOutData) {
+      alert("Check-out date must be after check-in date.");
       return;
     }
 
     const params = new URLSearchParams();
-    params.append("hotelId", hotel?.id || "");
+    if (hotel?.id) {
+      params.append("hotelId", hotel.id.toString());
+    }
+
     params.append("roomType", room.type);
     params.append("checkIn", bookingData.checkIn);
     params.append("checkOut", bookingData.checkOut);
-    params.append("rooms", bookingData.rooms.toString());
-    params.append(
-      "guests",
-      `${bookingData.adults} Adults, ${bookingData.children} Children`,
-    );
+    params.append("room", bookingData.rooms.toString());
+    params.append("adults", bookingData.adults.toString());
+    params.append("children", bookingData.children.toString());
 
     router.push(`/review?${params.toString()}`);
   };
 
+  if (!hotel) return null;
+
   if (variant === "mobile") {
     return (
-      <div className="my-2 flex flex-row gap-4 pb-2">
-        {hotel?.rooms.map((room, idx) => (
+      <div className="mt-2 flex justify-between gap-6">
+        {hotel.rooms.map((room, idx) => (
           <div
             key={idx}
-            className="flex w-full max-w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow"
-            style={{ flex: 1 }}
+            className="flex h-[110px] w-[370px] overflow-hidden rounded-sm border border-gray-200 bg-white shadow"
           >
-            {/* Image on top */}
-            <div className="relative h-40 w-full">
+            {/* Image */}
+            <div className="relative h-full w-[120px]">
               <Image
                 src={room.image}
                 alt={room.type}
                 fill
-                className="rounded-t-lg object-cover"
+                className="object-cover"
               />
             </div>
-            {/* Info below image */}
-            <div className="flex flex-col items-start px-4 py-3">
-              <span className="mb-1 text-base font-medium text-gray-700">
-                {room.type}
-              </span>
-              <span className="mb-2 text-lg font-bold text-blue-700">
-                {room.price.toLocaleString()} BAHT/night
+            {/* Info */}
+            <div className="flex flex-1 flex-col justify-center px-4">
+              <span className="mb-1 text-xs text-gray-500">{room.type}</span>
+              <span className="text-xl font-bold text-blue-700">
+                {room.price} BAHT/night
               </span>
             </div>
-            {/* Horizontal Book Now Button */}
+            {/* Vertical Book Now Button */}
             <button
-              className="w-full rounded-b-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+              className="flex h-full w-[48px] items-center justify-center rounded-none border-none bg-blue-600 px-0 py-0 font-semibold text-white outline-none transition-colors hover:bg-blue-700"
+              style={{
+                writingMode: "vertical-rl",
+                textOrientation: "mixed",
+              }}
               onClick={() => handleBookNow(room)}
             >
               Book Now

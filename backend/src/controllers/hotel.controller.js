@@ -22,7 +22,7 @@ const searchHotels = (req, res) => {
 const getHotelById = (req, res) => {
   try {
     const { id } = req.params;
-    const hotel = hotelsData.find(h => h.id === parseInt(id));
+    const hotel = hotelsData.find(h => h.id.toString() === id);
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel not found' });
     }
@@ -37,8 +37,8 @@ const calculateCost = (req, res) => {
   try {
     const { hotelId, roomType, days } = req.body;
 
-    if (!hotelId || !roomType || !days) {
-      return res.status(400).json({ error: 'Missing hotelId, roomType, or days in request body' });
+    if (!hotelId || !roomType || !days || isNaN(parseInt(days)) || parseInt(days) <= 0) {
+      return res.status(400).json({ error: 'Missing or invalid hotelId, roomType, or days in request body' });
     }
 
     const hotel = hotelsData.find(h => h.id === parseInt(hotelId));

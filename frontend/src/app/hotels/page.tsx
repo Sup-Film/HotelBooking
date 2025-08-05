@@ -1,39 +1,53 @@
-"use client";
 import Sidebar from "@/components/Sidebar";
 import { mockRecommendedHotels } from "@/data/hotels";
 import RecommendedList from "./components/RecommendedList";
 import ExploreSearchBar from "../../components/ExploreSearchBar";
 import CardBestPlace from "./components/CardBestPlace";
-import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Hotel } from "@/types/index";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
-export default function ExplorePage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const location = searchParams?.get("location") ?? "";
+async function fetchHotelsByLocation(location: string): Promise<Hotel[]> {
+  try {
+    const res = await api.get(`/search?location=${location}`);
+    return res.data; // คืนค่าเป็น Array ของ Hotel
+  } catch (error) {
+    console.log("Error fetching hotels:", error);
+    return []; // คืนค่าเป็น Array ว่างเมื่อเกิด Error
+  }
+}
 
-  const [hotels, setHotels] = useState<Hotel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const HotelResults = async ({
+  location,
+  variant,
+}: {
+  location: string;
+  variant: "desktop" | "mobile";
+}) => {
+  const hotels = await fetchHotelsByLocation(location);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchHotels = async () => {
-      try {
-        const res = await api.get(`/search?location=${location}`);
-        setHotels(res.data);
-        // console.log("Fetched hotels:", res.data);
-      } catch (error) {
-        setHotels([]); // หรือ mockHotels
-        console.error("Error fetching hotels:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchHotels();
-  }, [location]);
+  if (hotels.length === 0) {
+    return (
+      <div className="py-8 text-center text-gray-500">
+        No hotels found for {location}
+      </div>
+    );
+  }
+
+  return <CardBestPlace bestPlaces={hotels} variant={variant} />;
+};
+
+// ปรับ Page components เป็น async function
+export default async function ExplorePage({
+  searchParams,
+}: {
+  searchParams: { location?: string };
+}) {
+  // ดึงค่า location จาก searchParams
+  const location =
+    typeof searchParams.location === "string" ? searchParams.location : "";
+  const hotels = await fetchHotelsByLocation(location);
 
   return (
     <div className="flex h-full w-full bg-[#f7f8fd]">
@@ -42,7 +56,7 @@ export default function ExplorePage() {
       {/* Main Content for Desktop */}
       <div className="hidden flex-1 flex-col sm:flex">
         {/* Top Section: Search Bar */}
-        <ExploreSearchBar variant="desktop" onBack={() => router.back()} />
+        <ExploreSearchBar variant="desktop" />
 
         {/* Bottom Section: 2 columns */}
         <div className="flex flex-1 gap-6 px-8 pb-8">
@@ -62,15 +76,18 @@ export default function ExplorePage() {
                 </button>
               </div>
             </div>
-            {isLoading ? (
-              <LoadingSkeleton width="w-full" height="h-96" rounded="rounded-xl" lines={1} />
-            ) : hotels.length === 0 ? (
-              <div className="py-8 text-center text-gray-500">
-                No hotels found
-              </div>
-            ) : (
-              <CardBestPlace bestPlaces={hotels} variant="desktop" />
-            )}
+            <Suspense
+              fallback={
+                <LoadingSkeleton
+                  width="w-full"
+                  height="h-96"
+                  rounded="rounded-xl"
+                  lines={1}
+                />
+              }
+            >
+              <HotelResults location={location} variant="desktop" />
+            </Suspense>
           </section>
 
           {/* Right Section (20%) */}
@@ -111,14 +128,18 @@ export default function ExplorePage() {
             </button>
           </div>
         </div>
-        {/* Best Places Card */}
-        {isLoading ? (
-          <LoadingSkeleton width="w-full" height="h-32" rounded="rounded-xl" lines={2} />
-        ) : hotels.length === 0 ? (
-          <div className="py-8 text-center text-gray-500">No hotels found</div>
-        ) : (
-          <CardBestPlace bestPlaces={hotels} variant="mobile" />
-        )}
+        <Suspense
+          fallback={
+            <LoadingSkeleton
+              width="w-full"
+              height="h-96"
+              rounded="rounded-xl"
+              lines={1}
+            />
+          }
+        >
+          <HotelResults location={location} variant="mobile" />
+        </Suspense>
       </div>
     </div>
   );

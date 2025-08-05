@@ -8,7 +8,6 @@ interface RecentSearchesProps {
   hotels: Hotel[]; // รายการโรงแรมที่จะแสดง
   title?: string; // หัวข้อของ section
   variant?: "desktop" | "mobile";
-  isLoading?: boolean; // สถานะการโหลดข้อมูล
   bookingData?: {
     checkIn: string;
     checkOut: string;
@@ -22,7 +21,6 @@ export function RecentSearches({
   hotels,
   title = "Recent Searches",
   variant = "desktop",
-  isLoading = false,
   bookingData = { checkIn: "", checkOut: "", adults: 1, children: 0, rooms: 1 },
 }: RecentSearchesProps) {
   const router = useRouter();
@@ -33,7 +31,7 @@ export function RecentSearches({
       alert("Please select Check-in and Check-out dates.");
       return;
     }
-    
+
     const checkInDate = new Date(bookingData.checkIn);
     const checkOutDate = new Date(bookingData.checkOut);
 
@@ -55,33 +53,6 @@ export function RecentSearches({
 
     router.push(`/review?${params.toString()}`);
   };
-
-  // แสดง Loading state ขณะโหลดข้อมูล
-  if (isLoading) {
-    return (
-      <div className="w-full">
-        <h3 className="mb-4 text-lg font-semibold">{title}</h3>
-        <div
-          className={
-            variant === "desktop"
-              ? "flex flex-col gap-4"
-              : "flex flex-row gap-x-5 overflow-x-auto pb-2"
-          }
-        >
-          {/* Skeleton สำหรับแต่ละ card */}
-          {Array.from({ length: variant === "desktop" ? 3 : 2 }).map((_, i) => (
-            <LoadingSkeleton
-              key={i}
-              width={variant === "desktop" ? "w-full" : "w-64"}
-              height={variant === "desktop" ? "h-40" : "h-32"}
-              rounded="rounded-xl"
-              className=""
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   // ถ้าไม่มีข้อมูลโรงแรมหลังจากโหลดเสร็จแล้ว
   if (!hotels || hotels.length === 0) {
